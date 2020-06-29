@@ -20,12 +20,12 @@ class SageIntacctSDKError(Exception):
         return repr(self.message)
 
 
-class ExpiredTokenError(SageIntacctSDKError):
-    """Expired (old) access token, 498 error."""
+class ExpiredSessionError(SageIntacctSDKError):
+    """Expired (old) session id, 498 error."""
 
 
-class InvalidTokenError(SageIntacctSDKError):
-    """Wrong/non-existing access token, 401 error."""
+class InvalidSessionError(SageIntacctSDKError):
+    """Wrong/non-existing session id, 401 error."""
 
 
 class WrongParamsError(SageIntacctSDKError):

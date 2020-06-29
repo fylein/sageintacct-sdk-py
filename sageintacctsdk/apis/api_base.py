@@ -14,7 +14,6 @@ class ApiBase:
     """The base class for all API classes."""
 
     def __init__(self):
-        self.__access_token = None
         self.__sender_id = None
         self.__sender_password = None
         self.__session_id = None
@@ -39,7 +38,9 @@ class ApiBase:
     def _get_session_id(self, user_id: str, company_id: str, user_password: str):
         """
         Sets the session id for APIs
-        :param access_token: acceess token (JWT)
+        :param user_id: user id
+        :param company_id: company id
+        :param user_password: user password
         :return: session id
         """
 
@@ -130,13 +131,13 @@ class ApiBase:
             raise WrongParamsError('Some of the parameters are wrong', parsed_response)
 
         if response.status_code == 401:
-            raise InvalidTokenError('Invalid token / Incorrect credentials', parsed_response)
+            raise InvalidSessionError('Invalid session / Incorrect credentials', parsed_response)
 
         if response.status_code == 404:
             raise NotFoundItemError('Not found item with ID', parsed_response)
 
         if response.status_code == 498:
-            raise ExpiredTokenError('Expired token, try to refresh it', parsed_response)
+            raise ExpiredSessionError('Expired session, try to refresh it', parsed_response)
 
         if response.status_code == 500:
             raise InternalServerError('Internal server error', parsed_response)

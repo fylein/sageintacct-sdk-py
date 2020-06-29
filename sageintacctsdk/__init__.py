@@ -7,8 +7,8 @@ from.exceptions import *
 __all__ = [
     'SageIntacctSDK',
     'SageIntacctSDKError',
-    'ExpiredTokenError',
-    'InvalidTokenError',
+    'ExpiredSessionError',
+    'InvalidSessionError',
     'WrongParamsError',
     'NotFoundItemError',
     'InternalServerError'
