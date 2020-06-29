@@ -24,7 +24,7 @@ class SageIntacctSDK:
         self.__company_id = company_id
         self.__user_password = user_password
 
-        self.__access_token = None
+        self.__session_id = None
 
         self.SageIntacct = ApiBase()
         self.update_sender_id()
