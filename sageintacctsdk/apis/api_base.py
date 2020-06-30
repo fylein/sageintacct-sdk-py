@@ -118,11 +118,11 @@ class ApiBase:
             if parsed_response['response']['control']['status'] == 'success':
                 api_response = parsed_response['response']['operation']
 
-            if api_response['result']['status'] == 'success':
-                return api_response
-
             if parsed_response['response']['control']['status'] == 'failure':
                 raise WrongParamsError('Some of the parameters are wrong', parsed_response['response']['errormessage'])
+
+            if api_response['result']['status'] == 'success':
+                return api_response
 
             if api_response['result']['status'] == 'failure':
                 raise WrongParamsError('Error during {0}'.format(api_response['result']['function']), '{0}'.format(api_response['result']['errormessage']))

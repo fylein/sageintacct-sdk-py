@@ -22,6 +22,27 @@ class Employees(ApiBase):
         }
         return self._format_post_request(data)
 
+    def get(self, field: str, value: str):
+        """Get location from Sage Intacct
+
+        Parameters:
+            field (str): A parameter to filter employees by the field. (required).
+            value (str): A parameter to filter employees by the field - value. (required).
+
+        Returns:
+            Dict in Location schema.
+        """
+        data = {
+            'readByQuery': {
+                'object': 'EMPLOYEE',
+                'fields': '*',
+                'query': "{0} = '{1}'".format(field, value),
+                'pagesize': '1000'
+            }
+        }
+
+        return self._format_post_request(data)['data']
+
     def get_all(self):
         """Get all employees from Sage Intacct
 

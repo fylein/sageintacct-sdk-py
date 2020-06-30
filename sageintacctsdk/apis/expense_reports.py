@@ -20,6 +20,46 @@ class ExpenseReports(ApiBase):
         }
         return self._format_post_request(data)
 
+    def get(self, field: str, value: str):
+        """Get expense reports from Sage Intacct
+
+        Parameters:
+            field (str): A parameter to filter expense reports by the field. (required).
+            value (str): A parameter to filter expense reports by the field - value. (required).
+
+        Returns:
+            Dict in Expense Reports schema.
+        """
+        data = {
+            'query': {
+                'object': 'EEXPENSES',
+                'select': {
+                    'field': [
+                        'RECORDNO',
+                        'RECORDID',
+                        'WHENCREATED',
+                        'WHENPOSTED',
+                        'TOTALENTERED',
+                        'STATE',
+                        'TOTALDUE',
+                        'DESCRIPTION',
+                        'CURRENCY',
+                        'BASECURR',
+                        'MEMO'
+                    ]
+                },
+                'filter': {
+                    'equalto': {
+                        'field': field,
+                        'value': value
+                    }
+                },
+                'pagesize': '2000'
+            }
+        }
+
+        return self._format_post_request(data)['data']
+
     def get_all(self):
         """Get all expense reports from Sage Intacct
 

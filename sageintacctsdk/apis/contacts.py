@@ -22,6 +22,44 @@ class Contacts(ApiBase):
         }
         return self._format_post_request(data)
 
+    def get(self, field: str, value: str):
+        """Get contact from Sage Intacct
+
+        Parameters:
+            field (str): A parameter to filter contacts by the field. (required).
+            value (str): A parameter to filter contacts by the field - value. (required).
+
+        Returns:
+            Dict in Contact schema.
+        """
+        data = {
+            'query': {
+                'object': 'CONTACT',
+                'select': {
+                    'field': [
+                        'RECORDNO',
+                        'CONTACTNAME',
+                        'COMPANYNAME',
+                        'FIRSTNAME',
+                        'LASTNAME',
+                        'INITIAL',
+                        'PRINTAS',
+                        'TAXABLE',
+                        'MAILADDRESS.ADDRESS1'
+                    ]
+                },
+                'filter': {
+                    'equalto': {
+                        'field': field,
+                        'value': value
+                    }
+                },
+                'pagesize': '2000'
+            }
+        }
+
+        return self._format_post_request(data)['data']
+
     def get_all(self):
         """Get all contacts from Sage Intacct
 
