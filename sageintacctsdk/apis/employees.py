@@ -21,3 +21,20 @@ class Employees(ApiBase):
             }
         }
         return self._format_post_request(data)
+
+    def get_all(self):
+        """Get all employees from Sage Intacct
+
+        Returns:
+            List of Dict in Employee schema.
+        """
+        data = {
+            'readByQuery': {
+                'object': 'EMPLOYEE',
+                'fields': '*',
+                'query': None,
+                'pagesize': '1000'
+            }
+        }
+
+        return self._format_post_request(data)['data']['employee']

@@ -21,3 +21,20 @@ class Accounts(ApiBase):
             }
         }
         return self._format_post_request(data)
+
+    def get_all(self):
+        """Get all general ledger accounts from Sage Intacct
+
+        Returns:
+            List of Dict in General Ledger Account schema.
+        """
+        data = {
+            'readByQuery': {
+                'object': 'GLACCOUNT',
+                'fields': '*',
+                'query': None,
+                'pagesize': '1000'
+            }
+        }
+
+        return self._format_post_request(data)['data']['glaccount']

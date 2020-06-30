@@ -19,3 +19,52 @@ class ExpenseReports(ApiBase):
             'create_expensereport': data
         }
         return self._format_post_request(data)
+
+    def get_all(self):
+        """Get all expense reports from Sage Intacct
+
+        Returns:
+            List of Dict in Expense Reports schema.
+        """
+        total_expense_reports = []
+        get_count = {
+            'query': {
+                'object': 'EEXPENSES',
+                'select': {
+                    'field': 'RECORDNO'
+                },
+                'pagesize': '1'
+            }
+        }
+
+        response = self._format_post_request(get_count)
+        count = int(response['data']['@totalcount'])
+        pagesize = 2000
+        offset = 0
+        for i in range(0, count, pagesize):
+            data = {
+                'query': {
+                    'object': 'EEXPENSES',
+                    'select': {
+                        'field': [
+                            'RECORDNO',
+                            'RECORDID',
+                            'WHENCREATED',
+                            'WHENPOSTED',
+                            'TOTALENTERED',
+                            'STATE',
+                            'TOTALDUE',
+                            'DESCRIPTION',
+                            'CURRENCY',
+                            'BASECURR',
+                            'MEMO'
+                        ]
+                    },
+                    'pagesize': pagesize,
+                    'offset': offset
+                }
+            }
+            expense_reports = self._format_post_request(data)['data']['EEXPENSES']
+            total_expense_reports = total_expense_reports + expense_reports
+            offset = offset + pagesize
+        return total_expense_reports

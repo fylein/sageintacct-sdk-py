@@ -21,3 +21,20 @@ class Locations(ApiBase):
             }
         }
         return self._format_post_request(data)
+
+    def get_all(self):
+        """Get all locations from Sage Intacct
+
+        Returns:
+            List of Dict in Locations schema.
+        """
+        data = {
+            'readByQuery': {
+                'object': 'LOCATION',
+                'fields': '*',
+                'query': None,
+                'pagesize': '1000'
+            }
+        }
+
+        return self._format_post_request(data)['data']['location']
