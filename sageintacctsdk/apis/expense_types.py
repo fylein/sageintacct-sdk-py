@@ -22,6 +22,27 @@ class ExpenseTypes(ApiBase):
         }
         return self._format_post_request(data)
 
+    def get(self, field: str, value: str):
+        """Get expense types from Sage Intacct
+
+        Parameters:
+            field (str): A parameter to filter expense types by the field. (required).
+            value (str): A parameter to filter expense types by the field - value. (required).
+
+        Returns:
+            Dict in Location schema.
+        """
+        data = {
+            'readByQuery': {
+                'object': 'EEACCOUNTLABEL',
+                'fields': '*',
+                'query': "{0} = '{1}'".format(field, value),
+                'pagesize': '1000'
+            }
+        }
+
+        return self._format_post_request(data)['data']
+
     def get_all(self):
         """Get all expense types from Sage Intacct
 
