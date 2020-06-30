@@ -1,6 +1,7 @@
 """
 Sage Intacct Python SDK
 """
+from .exceptions import *
 from .apis import *
 
 class SageIntacctSDK:
@@ -24,9 +25,17 @@ class SageIntacctSDK:
         self.__company_id = company_id
         self.__user_password = user_password
 
-        self.__session_id = None
+        self.__access_token = None
 
-        self.SageIntacct = ApiBase()
+        self.api_base = ApiBase()
+        self.contacts = Contacts()
+        self.locations = Locations()
+        self.employees = Employees()
+        self.accounts = Accounts()
+        self.expense_types = ExpenseTypes()
+        self.attachments = Attachments()
+        self.expense_reports = ExpenseReports()
+
         self.update_sender_id()
         self.update_sender_password()
         self.update_session_id()
@@ -35,17 +44,38 @@ class SageIntacctSDK:
         """
         Update the sender id in all API objects.
         """
-        self.SageIntacct.set_sender_id(self.__sender_id)
+        self.api_base.set_sender_id(self.__sender_id)
+        self.contacts.set_sender_id(self.__sender_id)
+        self.locations.set_sender_id(self.__sender_id)
+        self.employees.set_sender_id(self.__sender_id)
+        self.accounts.set_sender_id(self.__sender_id)
+        self.expense_types.set_sender_id(self.__sender_id)
+        self.attachments.set_sender_id(self.__sender_id)
+        self.expense_reports.set_sender_id(self.__sender_id)
 
     def update_sender_password(self):
         """
         Update the sender password in all API objects.
         """
-        self.SageIntacct.set_sender_password(self.__sender_password)
+        self.api_base.set_sender_password(self.__sender_password)
+        self.contacts.set_sender_password(self.__sender_password)
+        self.locations.set_sender_password(self.__sender_password)
+        self.employees.set_sender_password(self.__sender_password)
+        self.accounts.set_sender_password(self.__sender_password)
+        self.expense_types.set_sender_password(self.__sender_password)
+        self.attachments.set_sender_password(self.__sender_password)
+        self.expense_reports.set_sender_password(self.__sender_password)
 
     def update_session_id(self):
         """
         Update the session id and change it in all API objects.
         """
-        self.__session_id = self.SageIntacct._get_session_id(self.__user_id, self.__company_id, self.__user_password)
-        self.SageIntacct.set_session_id(self.__session_id)
+        self.__session_id = self.api_base._get_session_id(self.__user_id, self.__company_id, self.__user_password)
+        self.api_base.set_session_id(self.__session_id)
+        self.contacts.set_session_id(self.__session_id)
+        self.locations.set_session_id(self.__session_id)
+        self.employees.set_session_id(self.__session_id)
+        self.accounts.set_session_id(self.__session_id)
+        self.expense_types.set_session_id(self.__session_id)
+        self.attachments.set_session_id(self.__session_id)
+        self.expense_reports.set_session_id(self.__session_id)

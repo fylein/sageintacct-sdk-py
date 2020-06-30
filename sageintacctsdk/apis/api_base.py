@@ -4,6 +4,7 @@ API Base class with util functions
 import json
 import datetime
 import uuid
+from typing import Dict
 
 import xmltodict
 import requests
@@ -14,6 +15,7 @@ class ApiBase:
     """The base class for all API classes."""
 
     def __init__(self):
+        self.__access_token = None
         self.__sender_id = None
         self.__sender_password = None
         self.__session_id = None
@@ -38,9 +40,7 @@ class ApiBase:
     def _get_session_id(self, user_id: str, company_id: str, user_password: str):
         """
         Sets the session id for APIs
-        :param user_id: user id
-        :param company_id: company id
-        :param user_password: user password
+        :param access_token: acceess token (JWT)
         :return: session id
         """
 
@@ -131,20 +131,23 @@ class ApiBase:
             raise WrongParamsError('Some of the parameters are wrong', parsed_response)
 
         if response.status_code == 401:
-            raise InvalidSessionError('Invalid session / Incorrect credentials', parsed_response)
+            raise InvalidTokenError('Invalid token / Incorrect credentials', parsed_response)
+
+        if response.status_code == 403:
+            raise NoPrivilegeError('Forbidden, the user has insufficient privilege', parsed_response)
 
         if response.status_code == 404:
             raise NotFoundItemError('Not found item with ID', parsed_response)
 
         if response.status_code == 498:
-            raise ExpiredSessionError('Expired session, try to refresh it', parsed_response)
+            raise ExpiredTokenError('Expired token, try to refresh it', parsed_response)
 
         if response.status_code == 500:
             raise InternalServerError('Internal server error', parsed_response)
 
         raise SageIntacctSDKError('Error: {0}'.format(parsed_response))
 
-    def Post(self, data: dict):
+    def _format_post_request(self, data: Dict):
         """Format data accordingly to convert them to xml.
 
         Parameters:
@@ -153,13 +156,10 @@ class ApiBase:
         Returns:
             A response from the _post_request (dict).
         """
-        try:
-            key = next(iter(data))
 
-        except:
-            raise WrongParamsError('Some of the parameters are wrong / Error in Payload')
-
+        key = next(iter(data))
         timestamp = datetime.datetime.now()
+
         dict_body = {
             'request': {
                 'control': {

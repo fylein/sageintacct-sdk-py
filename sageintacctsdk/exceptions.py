@@ -4,7 +4,7 @@ Sage Intacct SDK Exceptions
 
 
 class SageIntacctSDKError(Exception):
-    """The base exception class for SAGEINTACCTSDK.
+    """The base exception class for SageIntacctSDK.
 
     Parameters:
         msg (str): Short description of the error.
@@ -20,12 +20,24 @@ class SageIntacctSDKError(Exception):
         return repr(self.message)
 
 
-class ExpiredSessionError(SageIntacctSDKError):
-    """Expired (old) session id, 498 error."""
+class NotFoundClientError(SageIntacctSDKError):
+    """Client not found OAuth2 authorization, 404 error."""
 
 
-class InvalidSessionError(SageIntacctSDKError):
-    """Wrong/non-existing session id, 401 error."""
+class UnauthorizedClientError(SageIntacctSDKError):
+    """Wrong client secret and/or refresh token, 401 error."""
+
+
+class ExpiredTokenError(SageIntacctSDKError):
+    """Expired (old) access token, 498 error."""
+
+
+class InvalidTokenError(SageIntacctSDKError):
+    """Wrong/non-existing access token, 401 error."""
+
+
+class NoPrivilegeError(SageIntacctSDKError):
+    """The user has insufficient privilege, 403 error."""
 
 
 class WrongParamsError(SageIntacctSDKError):
@@ -37,4 +49,4 @@ class NotFoundItemError(SageIntacctSDKError):
 
 
 class InternalServerError(SageIntacctSDKError):
-    """The rest SAGEINTACCTSDK errors, 500 error."""
+    """The rest SageIntacctSDK errors, 500 error."""
