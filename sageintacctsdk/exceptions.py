@@ -20,14 +20,6 @@ class SageIntacctSDKError(Exception):
         return repr(self.message)
 
 
-class NotFoundClientError(SageIntacctSDKError):
-    """Client not found OAuth2 authorization, 404 error."""
-
-
-class UnauthorizedClientError(SageIntacctSDKError):
-    """Wrong client secret and/or refresh token, 401 error."""
-
-
 class ExpiredTokenError(SageIntacctSDKError):
     """Expired (old) access token, 498 error."""
 
