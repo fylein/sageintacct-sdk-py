@@ -31,6 +31,56 @@ class Attachments(ApiBase):
         }
         return self._format_post_request(data)
 
+    def get_folder(self, field: str, value: str):
+        """Get attachment folder from Sage Intacct
+
+        Parameters:
+            field (str): A parameter to filter attachment folder by the field. (required).
+            value (str): A parameter to filter attachment folder by the field - value. (required).
+
+        Returns:
+            Dict in Attachment Folder schema.
+        """
+        data = {
+            'get_list': {
+                '@object': 'supdocfolder',
+                'filter': {
+                    'expression': {
+                        'field': field,
+                        'operator': '=',
+                        'value': value
+                    }
+                }
+            }
+        }
+
+        return self._format_post_request(data)
+
+    def get_attachment(self, field: str, value: str):
+        """Get attachments from Sage Intacct
+
+        Parameters:
+            field (str): A parameter to filter attachments by the field. (required).
+            value (str): A parameter to filter attachments by the field - value. (required).
+
+        Returns:
+            Dict in Attachments schema.
+        """
+        data = {
+            'get_list': {
+                '@object': 'supdoc',
+                'filter': {
+                    'expression': {
+                        'field': field,
+                        'operator': '=',
+                        'value': value
+                    }
+                }
+            }
+        }
+
+        return self._format_post_request(data)
+
     def get_all_folders(self):
         """Get all attachment folder from Sage Intacct
 
