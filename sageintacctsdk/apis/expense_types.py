@@ -20,7 +20,7 @@ class ExpenseTypes(ApiBase):
                 'EEACCOUNTLABEL': data
             }
         }
-        return self._format_post_request(data)
+        return self.format_and_send_request(data)
 
     def get(self, field: str, value: str):
         """Get expense types from Sage Intacct
@@ -41,7 +41,7 @@ class ExpenseTypes(ApiBase):
             }
         }
 
-        return self._format_post_request(data)['data']
+        return self.format_and_send_request(data)['data']
 
     def get_all(self):
         """Get all expense types from Sage Intacct
@@ -58,4 +58,4 @@ class ExpenseTypes(ApiBase):
             }
         }
 
-        return self._format_post_request(data)['data']['eeaccountlabel']
+        return self.format_and_send_request(data)['data']['eeaccountlabel']

@@ -18,7 +18,7 @@ class ExpenseReports(ApiBase):
         data = {
             'create_expensereport': data
         }
-        return self._format_post_request(data)
+        return self.format_and_send_request(data)
 
     def get(self, field: str, value: str):
         """Get expense reports from Sage Intacct
@@ -58,7 +58,7 @@ class ExpenseReports(ApiBase):
             }
         }
 
-        return self._format_post_request(data)['data']
+        return self.format_and_send_request(data)['data']
 
     def get_all(self):
         """Get all expense reports from Sage Intacct
@@ -77,7 +77,7 @@ class ExpenseReports(ApiBase):
             }
         }
 
-        response = self._format_post_request(get_count)
+        response = self.format_and_send_request(get_count)
         count = int(response['data']['@totalcount'])
         pagesize = 2000
         offset = 0
@@ -104,7 +104,7 @@ class ExpenseReports(ApiBase):
                     'offset': offset
                 }
             }
-            expense_reports = self._format_post_request(data)['data']['EEXPENSES']
+            expense_reports = self.format_and_send_request(data)['data']['EEXPENSES']
             total_expense_reports = total_expense_reports + expense_reports
             offset = offset + pagesize
         return total_expense_reports

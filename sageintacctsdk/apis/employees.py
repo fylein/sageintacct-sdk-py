@@ -20,7 +20,7 @@ class Employees(ApiBase):
                 'EMPLOYEE': data
             }
         }
-        return self._format_post_request(data)
+        return self.format_and_send_request(data)
 
     def get(self, field: str, value: str):
         """Get location from Sage Intacct
@@ -41,7 +41,7 @@ class Employees(ApiBase):
             }
         }
 
-        return self._format_post_request(data)['data']
+        return self.format_and_send_request(data)['data']
 
     def get_all(self):
         """Get all employees from Sage Intacct
@@ -58,4 +58,4 @@ class Employees(ApiBase):
             }
         }
 
-        return self._format_post_request(data)['data']['employee']
+        return self.format_and_send_request(data)['data']['employee']

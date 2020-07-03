@@ -20,7 +20,7 @@ class Contacts(ApiBase):
                 'CONTACT': data
             }
         }
-        return self._format_post_request(data)
+        return self.format_and_send_request(data)
 
     def get(self, field: str, value: str):
         """Get contact from Sage Intacct
@@ -58,7 +58,7 @@ class Contacts(ApiBase):
             }
         }
 
-        return self._format_post_request(data)['data']
+        return self.format_and_send_request(data)['data']
 
     def get_all(self):
         """Get all contacts from Sage Intacct
@@ -77,7 +77,7 @@ class Contacts(ApiBase):
             }
         }
 
-        response = self._format_post_request(get_count)
+        response = self.format_and_send_request(get_count)
         count = int(response['data']['@totalcount'])
         pagesize = 2000
         offset = 0
@@ -102,7 +102,7 @@ class Contacts(ApiBase):
                     'offset': offset
                 }
             }
-            contacts = self._format_post_request(data)['data']['CONTACT']
+            contacts = self.format_and_send_request(data)['data']['CONTACT']
             total_contacts = total_contacts + contacts
             offset = offset + pagesize
         return total_contacts

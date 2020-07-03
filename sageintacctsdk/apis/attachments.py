@@ -18,7 +18,7 @@ class Attachments(ApiBase):
         data = {
             'create_supdocfolder': data
         }
-        return self._format_post_request(data)
+        return self.format_and_send_request(data)
 
     def post(self, data: Dict):
         """Post attachments to Sage Intacct.
@@ -29,7 +29,7 @@ class Attachments(ApiBase):
         data = {
             'create_supdoc': data
         }
-        return self._format_post_request(data)
+        return self.format_and_send_request(data)
 
     def get_folder(self, field: str, value: str):
         """Get attachment folder from Sage Intacct
@@ -54,7 +54,7 @@ class Attachments(ApiBase):
             }
         }
 
-        return self._format_post_request(data)
+        return self.format_and_send_request(data)
 
     def get_attachment(self, field: str, value: str):
         """Get attachments from Sage Intacct
@@ -79,7 +79,7 @@ class Attachments(ApiBase):
             }
         }
 
-        return self._format_post_request(data)
+        return self.format_and_send_request(data)
 
     def get_all_folders(self):
         """Get all attachment folder from Sage Intacct
@@ -93,7 +93,7 @@ class Attachments(ApiBase):
             }
         }
 
-        return self._format_post_request(data)['data']['supdocfolder']
+        return self.format_and_send_request(data)['data']['supdocfolder']
 
     def get_all_attachments(self):
         """Get all attachments from Sage Intacct
@@ -107,4 +107,4 @@ class Attachments(ApiBase):
             }
         }
 
-        return self._format_post_request(data)['data']['supdoc']
+        return self.format_and_send_request(data)['data']['supdoc']

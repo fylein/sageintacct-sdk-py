@@ -147,7 +147,7 @@ class ApiBase:
 
         raise SageIntacctSDKError('Error: {0}'.format(parsed_response))
 
-    def _format_post_request(self, data: Dict):
+    def format_and_send_request(self, data: Dict):
         """Format data accordingly to convert them to xml.
 
         Parameters:

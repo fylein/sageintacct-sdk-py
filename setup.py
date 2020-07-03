@@ -8,9 +8,9 @@ with open('README.md', 'r') as f:
 
 setuptools.setup(
     name='sageintacctsdk',
-    version='0.0.0',
-    author='Shwetabh Kumar',
-    author_email='shwetabh.kumar@fyle.in',
+    version='0.1.0',
+    author='Ashwin T',
+    author_email='ashwin.t@fyle.in',
     description='Python SDK for accessing Sage Intacct APIs',
     license='MIT',
     long_description=long_description,
