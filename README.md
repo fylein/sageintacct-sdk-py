@@ -63,7 +63,7 @@ response = connection.employees.post(data)
 response = connection.accounts.get_all()
 
 # Get details of Employee with EMPLOYEEID E101
-response = connection.emoloyee.get(field='EMPLOYEEID', value='E101')
+response = connection.employees.get(field='EMPLOYEEID', value='E101')
 ```
 
 See more details about the usage into the wiki pages of this project.
