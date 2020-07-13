@@ -34,13 +34,10 @@ class SageIntacctSDK:
         self.expense_types = ExpenseTypes()
         self.attachments = Attachments()
         self.expense_reports = ExpenseReports()
-<<<<<<< HEAD
         self.vendors = Vendors()
         self.bills = Bills()
         self.projects = Projects()
         self.departments = Departments()
-=======
->>>>>>> master
 
         self.update_sender_id()
         self.update_sender_password()
@@ -58,13 +55,10 @@ class SageIntacctSDK:
         self.expense_types.set_sender_id(self.__sender_id)
         self.attachments.set_sender_id(self.__sender_id)
         self.expense_reports.set_sender_id(self.__sender_id)
-<<<<<<< HEAD
         self.vendors.set_sender_id(self.__sender_id)
         self.bills.set_sender_id(self.__sender_id)
         self.projects.set_sender_id(self.__sender_id)
         self.departments.set_sender_id(self.__sender_id)
-=======
->>>>>>> master
 
     def update_sender_password(self):
         """
@@ -78,13 +72,10 @@ class SageIntacctSDK:
         self.expense_types.set_sender_password(self.__sender_password)
         self.attachments.set_sender_password(self.__sender_password)
         self.expense_reports.set_sender_password(self.__sender_password)
-<<<<<<< HEAD
         self.vendors.set_sender_password(self.__sender_password)
         self.bills.set_sender_password(self.__sender_password)
         self.projects.set_sender_password(self.__sender_password)
         self.departments.set_sender_password(self.__sender_password)
-=======
->>>>>>> master
 
     def update_session_id(self):
         """
@@ -99,10 +90,7 @@ class SageIntacctSDK:
         self.expense_types.set_session_id(self.__session_id)
         self.attachments.set_session_id(self.__session_id)
         self.expense_reports.set_session_id(self.__session_id)
-<<<<<<< HEAD
         self.vendors.set_session_id(self.__session_id)
         self.bills.set_session_id(self.__session_id)
         self.projects.set_session_id(self.__session_id)
         self.departments.set_session_id(self.__session_id)
-=======
->>>>>>> master
