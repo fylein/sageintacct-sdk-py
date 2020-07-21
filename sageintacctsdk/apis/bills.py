@@ -59,3 +59,24 @@ class Bills(ApiBase):
         }
 
         return self.format_and_send_request(data)['data']['apbill']
+
+    def update_attachment(self, recordno: str, supdocid: str):
+        """Update bill with supdocid
+
+        Parameters:
+            recordno (str): A parameter to update bill by the recordno. (required).
+            supdoc (str): A parameter to update attachment ID for the bill. (required).
+
+        Returns:
+            Dict in Bills update schema.
+        """
+        data = {
+            'update': {
+                'APBILL': {
+                    'RECORDNO': recordno,
+                    'SUPDOCID': supdocid
+                }
+            }
+        }
+
+        return self.format_and_send_request(data)
