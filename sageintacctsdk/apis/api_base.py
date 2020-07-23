@@ -121,6 +121,9 @@ class ApiBase:
             if parsed_response['response']['control']['status'] == 'failure':
                 raise WrongParamsError('Some of the parameters are wrong', parsed_response['response']['errormessage'])
 
+            if api_response['authentication']['status'] == 'failure':
+                raise InvalidTokenError('Invalid token / Incorrect credentials', api_response['errormessage'])
+
             if api_response['result']['status'] == 'success':
                 return api_response
 
