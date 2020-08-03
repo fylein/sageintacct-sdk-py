@@ -5,6 +5,8 @@ import json
 import datetime
 import uuid
 from typing import Dict
+from urllib.parse import unquote
+import re
 
 import xmltodict
 import requests
@@ -93,6 +95,37 @@ class ApiBase:
         """
         self.__session_id = session_id
 
+    def decode_support_id(self, errormessages):
+        """Decodes Support ID.
+
+        Parameters:
+            errormessages (dict / list): error message received from Sage Intacct.
+
+        Returns:
+            Same error message with decoded Support ID.
+        """
+        if isinstance(errormessages['error'], list):
+            error = errormessages['error'][0]
+            if (error and error['description2']):
+                message = error['description2']
+                support_id = re.search('Support ID: (.*)]', message)
+                if support_id.group(1):
+                    decoded_support_id = unquote(support_id.group(1))
+                    message = message.replace(support_id.group(1), decoded_support_id)
+                    errormessages['error'][0]['description2'] = message
+
+        elif isinstance(errormessages['error'], dict):
+            error = errormessages['error']
+            if (error and error['description2']):
+                message = error['description2']
+                support_id = re.search('Support ID: (.*)]', message)
+                if support_id.group(1):
+                    decoded_support_id = unquote(support_id.group(1))
+                    message = message.replace(support_id.group(1), decoded_support_id)
+                    errormessages['error']['description2'] = message
+
+        return errormessages
+
     def _post_request(self, dict_body: dict, api_url: str):
         """Create a HTTP post request.
 
@@ -119,16 +152,15 @@ class ApiBase:
                 api_response = parsed_response['response']['operation']
 
             if parsed_response['response']['control']['status'] == 'failure':
-                raise WrongParamsError('Some of the parameters are wrong', parsed_response['response']['errormessage'])
-
-            if api_response['authentication']['status'] == 'failure':
-                raise InvalidTokenError('Invalid token / Incorrect credentials', api_response['errormessage'])
+                exception_msg = self.decode_support_id(parsed_response['response']['errormessage'])
+                raise WrongParamsError('Some of the parameters are wrong', exception_msg)
 
             if api_response['result']['status'] == 'success':
                 return api_response
 
             if api_response['result']['status'] == 'failure':
-                raise WrongParamsError('Error during {0}'.format(api_response['result']['function']), '{0}'.format(api_response['result']['errormessage']))
+                exception_msg = self.decode_support_id(api_response['result']['errormessage'])
+                raise WrongParamsError('Error during {0}'.format(api_response['result']['function']), exception_msg)
 
         if response.status_code == 400:
             raise WrongParamsError('Some of the parameters are wrong', parsed_response)
