@@ -155,6 +155,9 @@ class ApiBase:
                 exception_msg = self.decode_support_id(parsed_response['response']['errormessage'])
                 raise WrongParamsError('Some of the parameters are wrong', exception_msg)
 
+            if api_response['authentication']['status'] == 'failure':
+                raise InvalidTokenError('Invalid token / Incorrect credentials', api_response['errormessage'])
+
             if api_response['result']['status'] == 'success':
                 return api_response
 
