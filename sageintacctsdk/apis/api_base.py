@@ -95,7 +95,7 @@ class ApiBase:
         """
         self.__session_id = session_id
 
-    def get_support_id_error_msg(self, errormessages):
+    def support_id_msg(self, errormessages):
         """Finds whether the error messages is list / dict and assign type and error assignment.
 
         Parameters:
@@ -123,9 +123,9 @@ class ApiBase:
         Returns:
             Same error message with decoded Support ID.
         """
-        get_support_id_error_msg = self.get_support_id_error_msg(errormessages)
-        data_type = get_support_id_error_msg['type']
-        error = get_support_id_error_msg['error']
+        support_id_msg = self.support_id_msg(errormessages)
+        data_type = support_id_msg['type']
+        error = support_id_msg['error']
         if (error and error['description2']):
             message = error['description2']
             support_id = re.search('Support ID: (.*)]', message)
