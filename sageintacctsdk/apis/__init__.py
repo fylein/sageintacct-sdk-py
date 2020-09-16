@@ -13,6 +13,8 @@ from .vendors import Vendors
 from .bills import Bills
 from .projects import Projects
 from .departments import Departments
+from .charge_card_accounts import ChargeCardAccounts
+from .charge_card_transactions import ChargeCardTransactions
 
 __all_ = [
     'ApiBase',
@@ -26,5 +28,7 @@ __all_ = [
     'Vendors',
     'Bills',
     'Projects',
-    'Departments'
+    'Departments',
+    'ChargeCardAccounts',
+    'ChargeCardTransactions'
 ]
