@@ -38,6 +38,8 @@ class SageIntacctSDK:
         self.bills = Bills()
         self.projects = Projects()
         self.departments = Departments()
+        self.charge_card_accounts = ChargeCardAccounts()
+        self.charge_card_transactions = ChargeCardTransactions()
 
         self.update_sender_id()
         self.update_sender_password()
@@ -59,6 +61,8 @@ class SageIntacctSDK:
         self.bills.set_sender_id(self.__sender_id)
         self.projects.set_sender_id(self.__sender_id)
         self.departments.set_sender_id(self.__sender_id)
+        self.charge_card_accounts.set_sender_id(self.__sender_id)
+        self.charge_card_transactions.set_sender_id(self.__sender_id)
 
     def update_sender_password(self):
         """
@@ -76,6 +80,8 @@ class SageIntacctSDK:
         self.bills.set_sender_password(self.__sender_password)
         self.projects.set_sender_password(self.__sender_password)
         self.departments.set_sender_password(self.__sender_password)
+        self.charge_card_accounts.set_sender_password(self.__sender_password)
+        self.charge_card_transactions.set_sender_password(self.__sender_password)
 
     def update_session_id(self):
         """
@@ -94,3 +100,5 @@ class SageIntacctSDK:
         self.bills.set_session_id(self.__session_id)
         self.projects.set_session_id(self.__session_id)
         self.departments.set_session_id(self.__session_id)
+        self.charge_card_accounts.set_session_id(self.__session_id)
+        self.charge_card_transactions.set_session_id(self.__session_id)
