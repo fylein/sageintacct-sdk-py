@@ -45,6 +45,8 @@ class SageIntacctSDK:
         self.items = Items()
         self.ap_payments = APPayments()
         self.reimbursements = Reimbursements()
+        self.checking_accounts = CheckingAccounts()
+        self.savings_accounts = SavingsAccounts()
 
         self.update_sender_id()
         self.update_sender_password()
@@ -72,6 +74,8 @@ class SageIntacctSDK:
         self.items.set_sender_id(self.__sender_id)
         self.ap_payments.set_sender_id(self.__sender_id)
         self.reimbursements.set_sender_id(self.__sender_id)
+        self.checking_accounts.set_sender_id(self.__sender_id)
+        self.savings_accounts.set_sender_id(self.__sender_id)
 
     def update_sender_password(self):
         """
@@ -95,6 +99,8 @@ class SageIntacctSDK:
         self.items.set_sender_password(self.__sender_password)
         self.ap_payments.set_sender_password(self.__sender_password)
         self.reimbursements.set_sender_password(self.__sender_password)
+        self.checking_accounts.set_sender_password(self.__sender_password)
+        self.savings_accounts.set_sender_password(self.__sender_password)
 
     def update_session_id(self):
         """
@@ -119,3 +125,5 @@ class SageIntacctSDK:
         self.items.set_session_id(self.__session_id)
         self.ap_payments.set_session_id(self.__session_id)
         self.reimbursements.set_session_id(self.__session_id)
+        self.checking_accounts.set_session_id(self.__session_id)
+        self.savings_accounts.set_session_id(self.__session_id)
