@@ -16,9 +16,7 @@ class Reimbursements(ApiBase):
             Dict of state of request with RECORDNO.
         """
         data = {
-            'create': {
-                'EPPAYMENT': data
-            }
+            'create_reimbursementrequest': data
         }
         return self.format_and_send_request(data)
 
