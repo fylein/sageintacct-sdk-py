@@ -49,13 +49,43 @@ class Departments(ApiBase):
         Returns:
             List of Dict in Departments schema.
         """
-        data = {
-            'readByQuery': {
+        total_departments = []
+        get_count = {
+            'query': {
                 'object': 'DEPARTMENT',
-                'fields': '*',
-                'query': None,
-                'pagesize': '1000'
+                'select': {
+                    'field': 'RECORDNO'
+                },
+                'pagesize': '1'
             }
         }
 
-        return self.format_and_send_request(data)['data']['department']
+        response = self.format_and_send_request(get_count)
+        count = int(response['data']['@totalcount'])
+        pagesize = 2000
+        offset = 0
+        for i in range(0, count, pagesize):
+            data = {
+                'query': {
+                    'object': 'DEPARTMENT',
+                    'select': {
+                        'field': [
+                            'RECORDNO',
+                            'DEPARTMENTID',
+                            'TITLE',
+                            'PARENTKEY',
+                            'PARENTID',
+                            'SUPERVISORNAME',
+                            'STATUS',
+                            'CUSTTITLE'
+                        ]
+                    },
+                    'pagesize': pagesize,
+                    'offset': offset
+                }
+            }
+            departments = self.format_and_send_request(data)['data']['DEPARTMENT']
+            total_departments = total_departments + departments
+            offset = offset + pagesize
+
+        return total_departments

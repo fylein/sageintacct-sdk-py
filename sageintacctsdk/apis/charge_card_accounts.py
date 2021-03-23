@@ -32,15 +32,62 @@ class ChargeCardAccounts(ApiBase):
         """Get all charge card accounts from Sage Intacct
 
         Returns:
-            List of Dict in Charge Card Account schema.
+            List of Dict in Charge Card schema.
         """
-        data = {
-            'readByQuery': {
+        total_charge_card_accounts = []
+        get_count = {
+            'query': {
                 'object': 'CREDITCARD',
-                'fields': '*',
-                'query': "LIABILITYTYPE = 'Credit'",
-                'pagesize': '1000'
+                'select': {
+                    'field': 'RECORDNO'
+                },
+                'filter': {
+                    'equalto': {
+                        'field': 'LIABILITYTYPE',
+                        'value': 'Credit'
+                    }
+                },
+                'pagesize': '1'
             }
         }
 
-        return self.format_and_send_request(data)['data']['creditcard']
+        response = self.format_and_send_request(get_count)
+        count = int(response['data']['@totalcount'])
+        pagesize = 2000
+        offset = 0
+        for i in range(0, count, pagesize):
+            data = {
+                'query': {
+                    'object': 'CREDITCARD',
+                    'select': {
+                        'field': [
+                            'RECORDNO',
+                            'CARDID',
+                            'DESCRIPTION',
+                            'CARDTYPE',
+                            'EXP_MONTH',
+                            'EXP_YEAR',
+                            'COMMCARD',
+                            'STATUS',
+                            'VENDORID',
+                            'DEPT',
+                            'LOCATION',
+                            'LIABILITYTYPE',
+                            'OUTSOURCECARD'
+                        ]
+                    },
+                    'filter': {
+                        'equalto': {
+                            'field': 'LIABILITYTYPE',
+                            'value': 'Credit'
+                        }
+                    },
+                    'pagesize': pagesize,
+                    'offset': offset
+                }
+            }
+            charge_card_accounts = self.format_and_send_request(data)['data']['CREDITCARD']
+            total_charge_card_accounts = total_charge_card_accounts + charge_card_accounts
+            offset = offset + pagesize
+
+        return total_charge_card_accounts

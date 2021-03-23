@@ -28,13 +28,44 @@ class Items(ApiBase):
         Returns:
             List of Dict in Items schema.
         """
-        data = {
-            'readByQuery': {
+        total_items = []
+        get_count = {
+            'query': {
                 'object': 'ITEM',
-                'fields': '*',
-                'query': None,
-                'pagesize': '1000'
+                'select': {
+                    'field': 'RECORDNO'
+                },
+                'pagesize': '1'
             }
         }
 
-        return self.format_and_send_request(data)['data']['item']
+        response = self.format_and_send_request(get_count)
+        count = int(response['data']['@totalcount'])
+        pagesize = 2000
+        offset = 0
+        for i in range(0, count, pagesize):
+            data = {
+                'query': {
+                    'object': 'ITEM',
+                    'select': {
+                        'field': [
+                            'RECORDNO',
+                            'ITEMID',
+                            'STATUS',
+                            'MRR',
+                            'NAME',
+                            'EXTENDED_DESCRIPTION',
+                            'PRODUCTLINEID',
+                            'GLGROUP',
+                            'ITEMTYPE'
+                        ]
+                    },
+                    'pagesize': pagesize,
+                    'offset': offset
+                }
+            }
+            items = self.format_and_send_request(data)['data']['ITEM']
+            total_items = total_items + items
+            offset = offset + pagesize
+
+        return total_items
