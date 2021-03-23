@@ -106,3 +106,4 @@ venv.bak/
 
 # Test files
 dry_run.py
+test.py

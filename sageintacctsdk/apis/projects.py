@@ -64,7 +64,7 @@ class Projects(ApiBase):
         count = int(response['data']['@totalcount'])
 
         offset = 0
-        page_size = 200
+        page_size = 2000
 
         for i in range(0, count, page_size):
             data = {
@@ -72,11 +72,27 @@ class Projects(ApiBase):
                     'object': 'PROJECT',
                     'select': {
                         'field': {
+                            'RECORDNO',
                             'PROJECTID',
                             'NAME',
+                            'DESCRIPTION',
+                            'CURRENCY',
+                            'PROJECTCATEGORY',
+                            'PROJECTSTATUS',
+                            'PARENTKEY',
+                            'PARENTID',
+                            'PARENTNAME',
                             'STATUS',
+                            'CUSTOMERKEY',
                             'CUSTOMERID',
-                            'CUSTOMERNAME'
+                            'CUSTOMERNAME',
+                            'PROJECTTYPE',
+                            'DEPARTMENTNAME',
+                            'LOCATIONID',
+                            'LOCATIONNAME',
+                            'BUDGETID',
+                            'MEGAENTITYID',
+                            'MEGAENTITYNAME'
                         }
                     },
                     'pagesize': page_size,

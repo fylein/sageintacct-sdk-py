@@ -64,8 +64,7 @@ class Vendors(ApiBase):
         count = int(response['data']['@totalcount'])
 
         offset = 0
-        page_size = 200
-
+        page_size = 2000
 
         for i in range(0, count, page_size):
             data = {
@@ -75,7 +74,26 @@ class Vendors(ApiBase):
                         'field': {
                             'RECORDNO',
                             'NAME',
-                            'VENDORID'
+                            'VENDORID',
+                            'PARENTKEY',
+                            'PARENTID',
+                            'PARENTNAME',
+                            'DISPLAYCONTACT.CONTACTNAME',
+                            'DISPLAYCONTACT.COMPANYNAME',
+                            'DISPLAYCONTACT.FIRSTNAME',
+                            'DISPLAYCONTACT.LASTNAME',
+                            'DISPLAYCONTACT.INITIAL',
+                            'DISPLAYCONTACT.PRINTAS',
+                            'DISPLAYCONTACT.PHONE1',
+                            'DISPLAYCONTACT.PHONE2',
+                            'DISPLAYCONTACT.EMAIL1',
+                            'DISPLAYCONTACT.EMAIL2',
+                            'VENDORACCOUNTNO',
+                            'VENDTYPE',
+                            'ACCOUNTLABEL',
+                            'APACCOUNT',
+                            'APACCOUNTTITLE',
+                            'STATUS'
                         }
                     },
                     'pagesize': page_size,

@@ -59,3 +59,61 @@ class Accounts(ApiBase):
         }
 
         return self.format_and_send_request(data)['data']['glaccount']
+
+    def get_all(self):
+        """Get all general ledger accounts from Sage Intacct
+
+        Returns:
+            List of Dict in General Ledger Account schema.
+        """
+        total_gl_accounts = []
+        get_count = {
+            'query': {
+                'object': 'GLACCOUNT',
+                'select': {
+                    'field': 'RECORDNO'
+                },
+                'pagesize': '1'
+            }
+        }
+
+        response = self.format_and_send_request(get_count)
+        count = int(response['data']['@totalcount'])
+        pagesize = 1000
+        offset = 0
+        for i in range(0, count, pagesize):
+            data = {
+                'query': {
+                    'object': 'GLACCOUNT',
+                    'select': {
+                        'field': [
+                            'RECORDNO',
+                            'ACCOUNTNO',
+                            'TITLE',
+                            'ACCOUNTTYPE',
+                            'NORMALBALANCE',
+                            'CLOSINGTYPE',
+                            'STATUS',
+                            'REQUIREDEPT',
+                            'REQUIRELOC',
+                            'CATEGORY',
+                            'ALTERNATIVEACCOUNT',
+                            'REQUIREPROJECT',
+                            'REQUIRECUSTOMER',
+                            'REQUIREVENDOR',
+                            'REQUIREEMPLOYEE',
+                            'REQUIREITEM',
+                            'REQUIRECLASS',
+                            'REQUIREWAREHOUSE'
+                        ]
+                    },
+                    'pagesize': pagesize,
+                    'offset': offset
+                }
+            }
+            print('calling api')
+            gl_accounts = self.format_and_send_request(data)['data']['GLACCOUNT']
+            total_gl_accounts = total_gl_accounts + gl_accounts
+            offset = offset + pagesize
+
+        return total_gl_accounts
