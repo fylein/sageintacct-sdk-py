@@ -41,6 +41,6 @@ __all_ = [
     'Items',
     'APPayments',
     'Reimbursements',
-    'CheckingAccounts'
+    'CheckingAccounts',
     'SavingsAccounts'
 ]

@@ -49,13 +49,58 @@ class Projects(ApiBase):
         Returns:
             List of Dict in Projects schema.
         """
-        data = {
-            'readByQuery': {
+        total_projects = []
+        get_count = {
+            'query': {
                 'object': 'PROJECT',
-                'fields': '*',
-                'query': None,
-                'pagesize': '1000'
+                'select': {
+                    'field': 'RECORDNO'
+                },
+                'pagesize': '1'
             }
         }
 
-        return self.format_and_send_request(data)['data']['project']
+        response = self.format_and_send_request(get_count)
+        count = int(response['data']['@totalcount'])
+
+        offset = 0
+        page_size = 2000
+
+        for i in range(0, count, page_size):
+            data = {
+                'query': {
+                    'object': 'PROJECT',
+                    'select': {
+                        'field': {
+                            'RECORDNO',
+                            'PROJECTID',
+                            'NAME',
+                            'DESCRIPTION',
+                            'CURRENCY',
+                            'PROJECTCATEGORY',
+                            'PROJECTSTATUS',
+                            'PARENTKEY',
+                            'PARENTID',
+                            'PARENTNAME',
+                            'STATUS',
+                            'CUSTOMERKEY',
+                            'CUSTOMERID',
+                            'CUSTOMERNAME',
+                            'PROJECTTYPE',
+                            'DEPARTMENTNAME',
+                            'LOCATIONID',
+                            'LOCATIONNAME',
+                            'BUDGETID',
+                            'MEGAENTITYID',
+                            'MEGAENTITYNAME'
+                        }
+                    },
+                    'pagesize': page_size,
+                    'offset': offset
+                }
+            }
+            projects = self.format_and_send_request(data)['data']['PROJECT']
+            total_projects = total_projects + projects
+            offset = offset + page_size
+
+        return total_projects

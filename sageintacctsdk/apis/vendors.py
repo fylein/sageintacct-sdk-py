@@ -49,13 +49,59 @@ class Vendors(ApiBase):
         Returns:
             List of Dict in Vendors schema.
         """
-        data = {
-            'readByQuery': {
+        total_vendors = []
+        get_count = {
+            'query': {
                 'object': 'VENDOR',
-                'fields': '*',
-                'query': None,
-                'pagesize': '1000'
+                'select': {
+                    'field': 'RECORDNO'
+                },
+                'pagesize': '1'
             }
         }
 
-        return self.format_and_send_request(data)['data']['vendor']
+        response = self.format_and_send_request(get_count)
+        count = int(response['data']['@totalcount'])
+
+        offset = 0
+        page_size = 2000
+
+        for i in range(0, count, page_size):
+            data = {
+                'query': {
+                    'object': 'VENDOR',
+                    'select': {
+                        'field': {
+                            'RECORDNO',
+                            'NAME',
+                            'VENDORID',
+                            'PARENTKEY',
+                            'PARENTID',
+                            'PARENTNAME',
+                            'DISPLAYCONTACT.CONTACTNAME',
+                            'DISPLAYCONTACT.COMPANYNAME',
+                            'DISPLAYCONTACT.FIRSTNAME',
+                            'DISPLAYCONTACT.LASTNAME',
+                            'DISPLAYCONTACT.INITIAL',
+                            'DISPLAYCONTACT.PRINTAS',
+                            'DISPLAYCONTACT.PHONE1',
+                            'DISPLAYCONTACT.PHONE2',
+                            'DISPLAYCONTACT.EMAIL1',
+                            'DISPLAYCONTACT.EMAIL2',
+                            'VENDORACCOUNTNO',
+                            'VENDTYPE',
+                            'ACCOUNTLABEL',
+                            'APACCOUNT',
+                            'APACCOUNTTITLE',
+                            'STATUS'
+                        }
+                    },
+                    'pagesize': page_size,
+                    'offset': offset
+                }
+            }
+            vendors = self.format_and_send_request(data)['data']['VENDOR']
+            total_vendors = total_vendors + vendors
+            offset = offset + page_size
+
+        return total_vendors

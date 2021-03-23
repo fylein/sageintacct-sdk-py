@@ -49,13 +49,41 @@ class Locations(ApiBase):
         Returns:
             List of Dict in Locations schema.
         """
-        data = {
-            'readByQuery': {
+        total_locations = []
+        get_count = {
+            'query': {
                 'object': 'LOCATION',
-                'fields': '*',
-                'query': None,
-                'pagesize': '1000'
+                'select': {
+                    'field': 'RECORDNO'
+                },
+                'pagesize': '1'
             }
         }
 
-        return self.format_and_send_request(data)['data']['location']
+        response = self.format_and_send_request(get_count)
+        count = int(response['data']['@totalcount'])
+        pagesize = 1000
+        offset = 0
+        for i in range(0, count, pagesize):
+            data = {
+                'query': {
+                    'object': 'LOCATION',
+                    'select': {
+                        'field': [
+                            'RECORDNO',
+                            'LOCATIONID',
+                            'NAME',
+                            'PARENTID',
+                            'STATUS',
+                            'CURRENCY'
+                        ]
+                    },
+                    'pagesize': pagesize,
+                    'offset': offset
+                }
+            }
+            locations = self.format_and_send_request(data)['data']['LOCATION']
+            total_locations = total_locations + locations
+            offset = offset + pagesize
+
+        return total_locations
