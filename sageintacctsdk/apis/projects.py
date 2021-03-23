@@ -49,12 +49,24 @@ class Projects(ApiBase):
         Returns:
             List of Dict in Projects schema.
         """
-        projects = []
+        total_projects = []
+        get_count = {
+            'query': {
+                'object': 'PROJECT',
+                'select': {
+                    'field': 'RECORDNO'
+                },
+                'pagesize': '1'
+            }
+        }
+
+        response = self.format_and_send_request(get_count)
+        count = int(response['data']['@totalcount'])
+
         offset = 0
         page_size = 200
-        count = False
 
-        while count is not True:
+        for i in range(0, count, page_size):
             data = {
                 'query': {
                     'object': 'PROJECT',
@@ -71,14 +83,8 @@ class Projects(ApiBase):
                     'offset': offset
                 }
             }
+            projects = self.format_and_send_request(data)['data']['PROJECT']
+            total_projects = total_projects + projects
             offset = offset + page_size
 
-            data = self.format_and_send_request(data)['data']
-
-            if 'PROJECT' in data:
-                projects = projects + data['PROJECT']
-
-            else:
-                count = True
-
-        return projects
+        return total_projects

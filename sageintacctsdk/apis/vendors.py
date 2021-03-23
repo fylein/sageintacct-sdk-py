@@ -49,12 +49,25 @@ class Vendors(ApiBase):
         Returns:
             List of Dict in Vendors schema.
         """
-        vendors = []
+        total_vendors = []
+        get_count = {
+            'query': {
+                'object': 'VENDOR',
+                'select': {
+                    'field': 'RECORDNO'
+                },
+                'pagesize': '1'
+            }
+        }
+
+        response = self.format_and_send_request(get_count)
+        count = int(response['data']['@totalcount'])
+
         offset = 0
         page_size = 200
-        count = False
 
-        while count is not True:
+
+        for i in range(0, count, page_size):
             data = {
                 'query': {
                     'object': 'VENDOR',
@@ -69,14 +82,8 @@ class Vendors(ApiBase):
                     'offset': offset
                 }
             }
+            vendors = self.format_and_send_request(data)['data']['VENDOR']
+            total_vendors = total_vendors + vendors
             offset = offset + page_size
 
-            data = self.format_and_send_request(data)['data']
-
-            if 'VENDOR' in data:
-                vendors = vendors + data['VENDOR']
-
-            else:
-                count = True
-
-        return vendors
+        return total_vendors
