@@ -94,17 +94,8 @@ class Accounts(ApiBase):
                             'NORMALBALANCE',
                             'CLOSINGTYPE',
                             'STATUS',
-                            'REQUIREDEPT',
-                            'REQUIRELOC',
                             'CATEGORY',
-                            'ALTERNATIVEACCOUNT',
-                            'REQUIREPROJECT',
-                            'REQUIRECUSTOMER',
-                            'REQUIREVENDOR',
-                            'REQUIREEMPLOYEE',
-                            'REQUIREITEM',
-                            'REQUIRECLASS',
-                            'REQUIREWAREHOUSE'
+                            'ALTERNATIVEACCOUNT'
                         ]
                     },
                     'pagesize': pagesize,
