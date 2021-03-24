@@ -49,23 +49,6 @@ class Accounts(ApiBase):
         Returns:
             List of Dict in General Ledger Account schema.
         """
-        data = {
-            'readByQuery': {
-                'object': 'GLACCOUNT',
-                'fields': '*',
-                'query': None,
-                'pagesize': '1000'
-            }
-        }
-
-        return self.format_and_send_request(data)['data']['glaccount']
-
-    def get_all(self):
-        """Get all general ledger accounts from Sage Intacct
-
-        Returns:
-            List of Dict in General Ledger Account schema.
-        """
         total_gl_accounts = []
         get_count = {
             'query': {
@@ -102,7 +85,6 @@ class Accounts(ApiBase):
                     'offset': offset
                 }
             }
-            print('calling api')
             gl_accounts = self.format_and_send_request(data)['data']['GLACCOUNT']
             total_gl_accounts = total_gl_accounts + gl_accounts
             offset = offset + pagesize
