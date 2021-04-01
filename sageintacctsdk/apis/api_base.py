@@ -177,6 +177,10 @@ class ApiBase:
 
             if api_response['result']['status'] == 'failure':
                 exception_msg = self.decode_support_id(api_response['result']['errormessage'])
+
+                if 'You do not have permission for API' in exception_msg['error']['description2']:
+                    raise InvalidTokenError('The user has insufficient privilege', exception_msg)
+
                 raise WrongParamsError('Error during {0}'.format(api_response['result']['function']), exception_msg)
 
         if response.status_code == 400:
