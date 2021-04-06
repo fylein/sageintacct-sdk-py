@@ -133,7 +133,7 @@ class ApiBase:
                 decoded_support_id = unquote(support_id.group(1))
                 message = message.replace(support_id.group(1), decoded_support_id)
 
-        # Converting dict to list for single error responses
+        # Converting dict to list even for single error response
         if data_type == 'dict':
             errormessages['error'] = [errormessages['error']]
     
