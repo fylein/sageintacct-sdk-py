@@ -133,10 +133,11 @@ class ApiBase:
                 decoded_support_id = unquote(support_id.group(1))
                 message = message.replace(support_id.group(1), decoded_support_id)
 
-        if data_type == 'list':
-            errormessages['error'][0]['description2'] = message if message else None
-        elif data_type == 'dict':
-            errormessages['error']['description2'] = message if message else None
+        # Converting dict to list for single error responses
+        if data_type == 'dict':
+            errormessages['error'] = [errormessages['error']]
+    
+        errormessages['error'][0]['description2'] = message if message else None
 
         return errormessages
 
@@ -178,8 +179,9 @@ class ApiBase:
             if api_response['result']['status'] == 'failure':
                 exception_msg = self.decode_support_id(api_response['result']['errormessage'])
 
-                if 'You do not have permission for API' in exception_msg['error']['description2']:
-                    raise InvalidTokenError('The user has insufficient privilege', exception_msg)
+                for error in exception_msg['error']:
+                    if 'You do not have permission for API' in error['description2']:
+                        raise InvalidTokenError('The user has insufficient privilege', exception_msg)
 
                 raise WrongParamsError('Error during {0}'.format(api_response['result']['function']), exception_msg)
 
