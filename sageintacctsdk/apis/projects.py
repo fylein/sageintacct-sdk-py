@@ -22,6 +22,20 @@ class Projects(ApiBase):
         }
         return self.format_and_send_request(data)
 
+    def count(self):
+        get_count = {
+            'query': {
+                'object': 'PROJECT',
+                'select': {
+                    'field': 'RECORDNO'
+                },
+                'pagesize': '1'
+            }
+        }
+
+        response = self.format_and_send_request(get_count)
+        return int(response['data']['@totalcount'])
+
     def get(self, field: str, value: str):
         """Get projects from Sage Intacct
 
