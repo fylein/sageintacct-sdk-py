@@ -64,18 +64,7 @@ class Projects(ApiBase):
             List of Dict in Projects schema.
         """
         total_projects = []
-        get_count = {
-            'query': {
-                'object': 'PROJECT',
-                'select': {
-                    'field': 'RECORDNO'
-                },
-                'pagesize': '1'
-            }
-        }
-
-        response = self.format_and_send_request(get_count)
-        count = int(response['data']['@totalcount'])
+        count = self.count()
 
         offset = 0
         page_size = 2000
