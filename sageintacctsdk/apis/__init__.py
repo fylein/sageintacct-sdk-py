@@ -21,6 +21,7 @@ from .ap_payments import APPayments
 from .reimbursements import Reimbursements
 from .checking_accounts import CheckingAccounts
 from .savings_accounts import SavingsAccounts
+from .tasks import Tasks
 
 __all_ = [
     'ApiBase',
@@ -42,5 +43,6 @@ __all_ = [
     'APPayments',
     'Reimbursements',
     'CheckingAccounts',
-    'SavingsAccounts'
+    'SavingsAccounts',
+    'Tasks'
 ]
