@@ -11,6 +11,7 @@ class Employees(ApiBase):
 
     def post(self, data: Dict):
         """Post employee to Sage Intacct.
+
         Returns:
             Dict of state of request with RECORDNO.
         """
@@ -26,6 +27,7 @@ class Employees(ApiBase):
         Parameters:
             field (str): A parameter to filter employees by the field. (required).
             value (str): A parameter to filter employees by the field - value. (required).
+
         Returns:
             Dict in Location schema.
         """
@@ -42,6 +44,7 @@ class Employees(ApiBase):
 
     def get_all(self):
         """Get all employees from Sage Intacct
+        
         Returns:
             List of Dict in Employee schema.
         """
