@@ -16,7 +16,9 @@ class ExpenseReports(ApiBase):
             Dict of state of request with key.
         """
         data = {
-            'create_expensereport': data
+            'create': {
+                'EEXPENSES': data
+            }
         }
         return self.format_and_send_request(data)
 
@@ -79,7 +81,7 @@ class ExpenseReports(ApiBase):
 
         response = self.format_and_send_request(get_count)
         count = int(response['data']['@totalcount'])
-        pagesize = 2000
+        pagesize = 1
         offset = 0
         for i in range(0, count, pagesize):
             data = {
@@ -105,6 +107,7 @@ class ExpenseReports(ApiBase):
                 }
             }
             expense_reports = self.format_and_send_request(data)['data']['EEXPENSES']
+            print(expense_reports)
             total_expense_reports = total_expense_reports + expense_reports
             offset = offset + pagesize
         return total_expense_reports

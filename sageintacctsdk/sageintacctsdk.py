@@ -47,6 +47,8 @@ class SageIntacctSDK:
         self.reimbursements = Reimbursements()
         self.checking_accounts = CheckingAccounts()
         self.savings_accounts = SavingsAccounts()
+        self.dimensions = GetDimensions()
+        self.dimension_values = DimensionValues()
 
         self.update_sender_id()
         self.update_sender_password()
@@ -76,6 +78,8 @@ class SageIntacctSDK:
         self.reimbursements.set_sender_id(self.__sender_id)
         self.checking_accounts.set_sender_id(self.__sender_id)
         self.savings_accounts.set_sender_id(self.__sender_id)
+        self.dimensions.set_sender_id(self.__sender_id)
+        self.dimension_values.set_sender_id(self.__sender_id)
 
     def update_sender_password(self):
         """
@@ -101,6 +105,8 @@ class SageIntacctSDK:
         self.reimbursements.set_sender_password(self.__sender_password)
         self.checking_accounts.set_sender_password(self.__sender_password)
         self.savings_accounts.set_sender_password(self.__sender_password)
+        self.dimensions.set_sender_password(self.__sender_password)
+        self.dimension_values.set_sender_password(self.__sender_password)
 
     def update_session_id(self):
         """
@@ -127,3 +133,5 @@ class SageIntacctSDK:
         self.reimbursements.set_session_id(self.__session_id)
         self.checking_accounts.set_session_id(self.__session_id)
         self.savings_accounts.set_session_id(self.__session_id)
+        self.dimensions.set_session_id(self.__session_id)
+        self.dimension_values.set_session_id(self.__session_id)
