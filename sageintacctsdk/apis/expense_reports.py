@@ -81,7 +81,7 @@ class ExpenseReports(ApiBase):
 
         response = self.format_and_send_request(get_count)
         count = int(response['data']['@totalcount'])
-        pagesize = 1
+        pagesize = 2000
         offset = 0
         for i in range(0, count, pagesize):
             data = {
@@ -107,7 +107,6 @@ class ExpenseReports(ApiBase):
                 }
             }
             expense_reports = self.format_and_send_request(data)['data']['EEXPENSES']
-            print(expense_reports)
             total_expense_reports = total_expense_reports + expense_reports
             offset = offset + pagesize
         return total_expense_reports
