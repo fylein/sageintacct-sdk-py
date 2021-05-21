@@ -6,6 +6,11 @@ from typing import Dict
 from .api_base import ApiBase
 
 class GetDimensions(ApiBase):
+    """Get all the Dimension from Sage Intact
+
+    Returns:
+        List of Dict of dimensions
+    """
 
     def get(self):
 

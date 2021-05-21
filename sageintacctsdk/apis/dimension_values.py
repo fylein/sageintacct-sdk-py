@@ -11,8 +11,9 @@ class DimensionValues(ApiBase):
         """Get all values of user defined dimension from Sage Intacct
         
         Returns:
-            List of Dict in Expense Reports schema
+            List of Dict of Values of Dimensions
         """
+        
         total_user_dimensions = []
         get_count = {
             'query': {
