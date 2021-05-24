@@ -9,7 +9,6 @@ from .api_base import ApiBase
 class Reimbursements(ApiBase):
     """Class for Reimbursements APIs."""
     def __init__(self):
-        # TODO: test post
         ApiBase.__init__(self, dimension='EPPAYMENT', post_legacy_method='create_reimbursementrequest')
 
     def get_all(self):

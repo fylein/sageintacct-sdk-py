@@ -112,7 +112,7 @@ class SageIntacctSDK:
         """
         Update the session id and change it in all API objects.
         """
-        self.__session_id = self.api_base._get_session_id(self.__user_id, self.__company_id, self.__user_password)
+        self.__session_id = self.api_base.get_session_id(self.__user_id, self.__company_id, self.__user_password)
         self.api_base.set_session_id(self.__session_id)
         self.contacts.set_session_id(self.__session_id)
         self.locations.set_session_id(self.__session_id)
