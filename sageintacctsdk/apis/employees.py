@@ -44,7 +44,7 @@ class Employees(ApiBase):
 
     def get_all(self):
         """Get all employees from Sage Intacct
-        
+ 
         Returns:
             List of Dict in Employee schema.
         """

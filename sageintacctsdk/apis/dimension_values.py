@@ -1,5 +1,5 @@
 """
-Sage Intacct Expense Custom Fields
+Sage Intacct Dimensions Values
 """
 from typing import Dict
 
@@ -8,7 +8,7 @@ from .api_base import ApiBase
 class DimensionValues(ApiBase):
 
     def get(self, dimension_name: str):
-        """Get all values of user defined dimension from Sage Intacct
+        """Get all values of given dimension from Sage Intacct
         
         Returns:
             List of Dict of Values of Dimensions

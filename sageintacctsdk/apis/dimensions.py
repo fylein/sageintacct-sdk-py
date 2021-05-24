@@ -1,5 +1,5 @@
 """
-Sage Intacct Expense Custom Fields
+Sage Intacct Dimensions
 """
 from typing import Dict
 
