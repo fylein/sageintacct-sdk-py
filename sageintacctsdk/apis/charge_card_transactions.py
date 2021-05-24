@@ -8,38 +8,8 @@ from .api_base import ApiBase
 
 class ChargeCardTransactions(ApiBase):
     """Class for Charge Card Transactions APIs."""
-
-    def post(self, data: Dict):
-        """Post charge card transactions to Sage Intacct.
-
-        Returns:
-            Dict of state of request with RECORDNO.
-        """
-        data = {
-            'record_cctransaction': data
-        }
-        return self.format_and_send_request(data)
-
-    def get(self, field: str, value: str):
-        """Get charge card transactions from Sage Intacct
-
-        Parameters:
-            field (str): A parameter to filter charge card transactions by the field. (required).
-            value (str): A parameter to filter charge card transactions by the field - value. (required).
-
-        Returns:
-            Dict in charge card transactions schema.
-        """
-        data = {
-            'readByQuery': {
-                'object': 'CCTRANSACTION',
-                'fields': '*',
-                'query': "{0} = '{1}'".format(field, value),
-                'pagesize': '1000'
-            }
-        }
-
-        return self.format_and_send_request(data)['data']
+    def __init__(self):
+        ApiBase.__init__(self, dimension='CCTRANSACTION', post_legacy_method='record_cctransaction')
 
     def get_all(self):
         """Get all charge card transactions from Sage Intacct

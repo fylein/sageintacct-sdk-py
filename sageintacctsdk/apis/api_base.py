@@ -11,17 +11,24 @@ import re
 import xmltodict
 import requests
 
-from ..exceptions import *
+from ..exceptions import SageIntacctSDKError, ExpiredTokenError, InvalidTokenError, NoPrivilegeError,\
+    WrongParamsError, NotFoundItemError, InternalServerError
+from .constants import dimensions_fields_mapping
 
 class ApiBase:
     """The base class for all API classes."""
 
-    def __init__(self):
-        self.__access_token = None
+    def __init__(self, dimension: str = None, pagesize: int = 2000, post_legacy_method: str = None):
+        # TODO: check page size
+        # TODO: check read by name and ready by query - get
+        # TODO: check employee get_all()
         self.__sender_id = None
         self.__sender_password = None
         self.__session_id = None
         self.__api_url = 'https://api.intacct.com/ia/xml/xmlgw.phtml'
+        self.__dimension = dimension
+        self.__pagesize = pagesize
+        self.__post_legacy_method = post_legacy_method
 
     def set_sender_id(self, sender_id: str):
         """
@@ -159,7 +166,7 @@ class ApiBase:
 
         response = requests.post(api_url, headers=api_headers, data=body)
 
-        parsed_xml = xmltodict.parse(response.text)
+        parsed_xml = xmltodict.parse(response.text, force_list={self.__dimension})
         parsed_response = json.loads(json.dumps(parsed_xml))
 
         if response.status_code == 200:
@@ -244,3 +251,88 @@ class ApiBase:
 
         response = self._post_request(dict_body, self.__api_url)
         return response['result']
+
+    def post(self, data: Dict):
+        if self.__dimension in ('CCTRANSACTION', 'EEXPENSES'):
+            return self.construct_post_legacy_payload(data)
+
+        return self.construct_post_payload(data)
+    
+    def construct_post_payload(self, data: Dict):
+        payload = {
+            'create': {
+                self.__dimension: data
+            }
+        }
+
+        return self.format_and_send_request(payload)
+
+    def construct_post_legacy_payload(self, data: Dict):
+        payload = {
+            self.__post_legacy_method: data
+        }
+
+        return self.format_and_send_request(payload)
+
+    def count(self):
+        get_count = {
+            'query': {
+                'object': self.__dimension,
+                'select': {
+                    'field': 'RECORDNO'
+                },
+                'pagesize': '1'
+            }
+        }
+
+        response = self.format_and_send_request(get_count)
+        return int(response['data']['@totalcount'])
+
+    def get(self, field: str, value: str):
+        """Get data from Sage Intacct based on filter.
+
+        Parameters:
+            field (str): A parameter to filter by the field. (required).
+            value (str): A parameter to filter by the field - value. (required).
+
+        Returns:
+            Dict.
+        """
+        data = {
+            'readByQuery': {
+                'object': self.__dimension,
+                'fields': '*',
+                'query': "{0} = '{1}'".format(field, value),
+                'pagesize': '1000'
+            }
+        }
+
+        return self.format_and_send_request(data)['data']
+
+    def get_all(self):
+        """Get all data from Sage Intacct
+
+        Returns:
+            List of Dict.
+        """
+        complete_data = []
+        count = self.count()
+        pagesize = self.__pagesize
+
+        for offset in range(0, count, pagesize):
+            data = {
+                'query': {
+                    'object': self.__dimension,
+                    'select': {
+                        # TODO: add support for sending fields from client
+                        'field': dimensions_fields_mapping[self.__dimension]
+                    },
+                    # TODO: add support for sending filters from client
+                    'pagesize': pagesize,
+                    'offset': offset
+                }
+            }
+            paginated_data = self.format_and_send_request(data)['data'][self.__dimension]
+            complete_data.extend(paginated_data)
+
+        return complete_data

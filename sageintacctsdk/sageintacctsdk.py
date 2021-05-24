@@ -1,7 +1,9 @@
 """
 Sage Intacct Python SDK
 """
-from .apis import *
+from .apis import ApiBase, Contacts, Locations, Employees, Accounts, ExpenseTypes, Attachments, ExpenseReports,\
+    Vendors, Bills, Projects, Departments, ChargeCardAccounts, ChargeCardTransactions, Customers, Items,\
+    APPayments, Reimbursements, CheckingAccounts, SavingsAccounts, Tasks, ExpensePaymentTypes
 
 
 class SageIntacctSDK:
@@ -24,8 +26,6 @@ class SageIntacctSDK:
         self.__user_id = user_id
         self.__company_id = company_id
         self.__user_password = user_password
-
-        self.__access_token = None
 
         self.api_base = ApiBase()
         self.contacts = Contacts()
