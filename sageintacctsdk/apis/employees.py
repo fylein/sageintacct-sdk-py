@@ -24,6 +24,7 @@ class Employees(ApiBase):
 
     def get(self, field: str, value: str):
         """Get location from Sage Intacct
+
         Parameters:
             field (str): A parameter to filter employees by the field. (required).
             value (str): A parameter to filter employees by the field - value. (required).
@@ -44,7 +45,7 @@ class Employees(ApiBase):
 
     def get_all(self):
         """Get all employees from Sage Intacct
- 
+
         Returns:
             List of Dict in Employee schema.
         """
