@@ -21,6 +21,8 @@ from .ap_payments import APPayments
 from .reimbursements import Reimbursements
 from .checking_accounts import CheckingAccounts
 from .savings_accounts import SavingsAccounts
+from .dimensions import Dimensions
+from .dimension_values import DimensionValues
 from .tasks import Tasks
 from .expense_payment_types import ExpensePaymentTypes
 
@@ -45,6 +47,8 @@ __all_ = [
     'Reimbursements',
     'CheckingAccounts',
     'SavingsAccounts',
+    'Dimensions',
+    'DimensionValues'
     'Tasks',
     'ExpensePaymentTypes'
 ]
