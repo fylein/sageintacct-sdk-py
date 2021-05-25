@@ -31,11 +31,46 @@ class ChargeCardTransactions(ApiBase):
             Dict in charge card transactions schema.
         """
         data = {
-            'readByQuery': {
+            'query': {
                 'object': 'CCTRANSACTION',
-                'fields': '*',
-                'query': "{0} = '{1}'".format(field, value),
-                'pagesize': '1000'
+                'select': {
+                    'field': [
+                        'RECORDNO',
+                        'RECORDID',
+                        'RECORD_URL',
+                        'WHENCREATED',
+                        'DESCRIPTION',
+                        'BASECURR',
+                        'CURRENCY',
+                        'TOTALENTERED',
+                        'TRX_TOTALENTERED',
+                        'TOTALPAID',
+                        'TRX_TOTALPAID',
+                        'TOTALSELECTED',
+                        'TRX_TOTALSELECTED',
+                        'TOTALDUE',
+                        'TRX_TOTALDUE',
+                        'WHENPAID',
+                        'STATE',
+                        'RAWSTATE',
+                        'CLEARED',
+                        'AUWHENCREATED',
+                        'WHENMODIFIED',
+                        'INCLUSIVETAX',
+                        'TAXSOLUTIONID',
+                        'TAXMETHOD',
+                        'MEGAENTITYKEY',
+                        'MEGAENTITYID',
+                        'MEGAENTITYNAME',
+                    ]
+                },
+                'filter': {
+                    'equalto': {
+                        'field': field,
+                        'value': value
+                    }
+                },
+                'pagesize': '2000'
             }
         }
 

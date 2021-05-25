@@ -37,6 +37,7 @@ class ExpenseReports(ApiBase):
                     'field': [
                         'RECORDNO',
                         'RECORDID',
+                        'RECORD_URL',
                         'WHENCREATED',
                         'WHENPOSTED',
                         'TOTALENTERED',

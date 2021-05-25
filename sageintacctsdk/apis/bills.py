@@ -33,11 +33,44 @@ class Bills(ApiBase):
             Dict in bills schema.
         """
         data = {
-            'readByQuery': {
+            'query': {
                 'object': 'APBILL',
-                'fields': '*',
-                'query': "{0} = '{1}'".format(field, value),
-                'pagesize': '1000'
+                'select': {
+                    'field': [
+                        'RECORDNO',
+                        'RECORDID',
+                        'RECORD_URL',
+                        'STATE',
+                        'VENDORID',
+                        'VENDORNAME',
+                        'DOCNUMBER',
+                        'TERMNAME',
+                        'WHENCREATED',
+                        'WHENPOSTED',
+                        "TOTALENTERED",
+                        'TOTALSELECTED',
+                        'TOTALPAID',
+                        'TOTALDUE',
+                        'WHENDUE',
+                        'WHENPAID',
+                        'RECPAYMENTDATE',
+                        'PAYMENTPRIORITY',
+                        'DESCRIPTION',
+                        'ONHOLD',
+                        'BASECURR',
+                        'CURRENCY',
+                        'WHENMODIFIED',
+                        'DUE_IN_DAYS',
+                        'PRBATCH',
+                    ]
+                },
+                'filter': {
+                    'equalto': {
+                        'field': field,
+                        'value': value
+                    }
+                },
+                'pagesize': '2000'
             }
         }
 
@@ -54,7 +87,7 @@ class Bills(ApiBase):
                 'object': 'APBILL',
                 'fields': '*',
                 'query': None,
-                'pagesize': '1000'
+                'pagesize': '10'
             }
         }
 
