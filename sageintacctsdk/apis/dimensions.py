@@ -5,7 +5,7 @@ from typing import Dict
 
 from .api_base import ApiBase
 
-class GetDimensions(ApiBase):
+class Dimensions(ApiBase):
     """Get all the Dimension from Sage Intact
 
     Returns:
@@ -15,7 +15,7 @@ class GetDimensions(ApiBase):
     def get(self):
 
         data = {
-            'getDimensions': {}
+            'Dimensions': {}
         }
 
         return self.format_and_send_request(data)['data']['dimensions']

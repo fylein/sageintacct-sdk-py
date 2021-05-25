@@ -47,7 +47,7 @@ class SageIntacctSDK:
         self.reimbursements = Reimbursements()
         self.checking_accounts = CheckingAccounts()
         self.savings_accounts = SavingsAccounts()
-        self.dimensions = GetDimensions()
+        self.dimensions = Dimensions()
         self.dimension_values = DimensionValues()
         self.tasks = Tasks()
         self.expense_payment_types = ExpensePaymentTypes()
