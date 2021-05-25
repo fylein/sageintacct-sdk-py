@@ -15,7 +15,7 @@ class Dimensions(ApiBase):
     def get(self):
 
         data = {
-            'Dimensions': {}
+            'getDimensions': {}
         }
 
         return self.format_and_send_request(data)['data']['dimensions']
