@@ -250,7 +250,7 @@ class ApiBase:
         return response['result']
 
     def post(self, data: Dict):
-        if self.__dimension in ('CCTRANSACTION', 'EEXPENSES', 'EPPAYMENT'):
+        if self.__dimension in ('CCTRANSACTION', 'EPPAYMENT'):
             return self.__construct_post_legacy_payload(data)
 
         return self.__construct_post_payload(data)
