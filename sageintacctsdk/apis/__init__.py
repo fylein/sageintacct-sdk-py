@@ -48,7 +48,7 @@ __all_ = [
     'CheckingAccounts',
     'SavingsAccounts',
     'Dimensions',
-    'DimensionValues'
+    'DimensionValues',
     'Tasks',
     'ExpensePaymentTypes'
 ]
