@@ -22,6 +22,20 @@ class Customers(ApiBase):
         }
         return self.format_and_send_request(data)
 
+    def count(self):
+        get_count = {
+            'query': {
+                'object': 'CUSTOMER',
+                'select': {
+                    'field': 'RECORDNO'
+                },
+                'pagesize': '1'
+            }
+        }
+
+        response = self.format_and_send_request(get_count)
+        return int(response['data']['@totalcount'])
+
     def get_all(self):
         """Get all customers from Sage Intacct
 

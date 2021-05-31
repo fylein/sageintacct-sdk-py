@@ -16,7 +16,9 @@ class ExpenseReports(ApiBase):
             Dict of state of request with key.
         """
         data = {
-            'create_expensereport': data
+            'create': {
+                'EEXPENSES': data
+            }
         }
         return self.format_and_send_request(data)
 
