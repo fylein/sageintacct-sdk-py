@@ -87,7 +87,7 @@ class Bills(ApiBase):
                 'object': 'APBILL',
                 'fields': '*',
                 'query': None,
-                'pagesize': '10'
+                'pagesize': '1000'
             }
         }
 
