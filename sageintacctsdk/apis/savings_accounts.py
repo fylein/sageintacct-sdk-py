@@ -6,25 +6,8 @@ from .api_base import ApiBase
 
 class SavingsAccounts(ApiBase):
     """Class for Savings Accounts APIs."""
-
-    def get(self, card_id: str):
-        """Get Savings Account from Sage Intacct
-
-        Parameters:
-            card_id (str): A parameter to get Savings Account by the CARDID. (required).
-
-        Returns:
-            Dict in Savings Account schema.
-        """
-        data = {
-            'readByName': {
-                'object': 'SAVINGSACCOUNT',
-                'keys': card_id,
-                'fields': '*'
-            }
-        }
-
-        return self.format_and_send_request(data)['data']
+    def __init__(self):
+        ApiBase.__init__(self, dimension='SAVINGSACCOUNT')
 
     def get_all(self):
         """Get all Savings Accounts from Sage Intacct

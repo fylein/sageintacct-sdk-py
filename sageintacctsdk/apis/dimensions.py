@@ -11,11 +11,9 @@ class Dimensions(ApiBase):
     Returns:
         List of Dict of dimensions
     """
-
-    def get(self):
-
+    def get_all(self):
         data = {
             'getDimensions': {}
         }
 
-        return self.format_and_send_request(data)['data']['dimensions']
+        return self.format_and_send_request(data)['data']['dimensions']['dimension']
