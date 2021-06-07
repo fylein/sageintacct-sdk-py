@@ -1,7 +1,10 @@
 """
 Sage Intacct Python SDK
 """
-from .apis import *
+from .apis import ApiBase, Contacts, Locations, Employees, Accounts, ExpenseTypes, Attachments, ExpenseReports,\
+    Vendors, Bills, Projects, Departments, ChargeCardAccounts, ChargeCardTransactions, Customers, Items,\
+    APPayments, Reimbursements, CheckingAccounts, SavingsAccounts, Tasks, ExpensePaymentTypes, Dimensions,\
+    DimensionValues
 
 
 class SageIntacctSDK:
@@ -24,8 +27,6 @@ class SageIntacctSDK:
         self.__user_id = user_id
         self.__company_id = company_id
         self.__user_password = user_password
-
-        self.__access_token = None
 
         self.api_base = ApiBase()
         self.contacts = Contacts()
@@ -118,7 +119,7 @@ class SageIntacctSDK:
         """
         Update the session id and change it in all API objects.
         """
-        self.__session_id = self.api_base._get_session_id(self.__user_id, self.__company_id, self.__user_password)
+        self.__session_id = self.api_base.get_session_id(self.__user_id, self.__company_id, self.__user_password)
         self.api_base.set_session_id(self.__session_id)
         self.contacts.set_session_id(self.__session_id)
         self.locations.set_session_id(self.__session_id)

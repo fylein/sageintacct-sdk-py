@@ -8,73 +8,8 @@ from .api_base import ApiBase
 
 class Bills(ApiBase):
     """Class for Bills APIs."""
-
-    def post(self, data: Dict):
-        """Post bills to Sage Intacct.
-
-        Returns:
-            Dict of state of request with RECORDNO.
-        """
-        data = {
-            'create': {
-                'APBILL': data
-            }
-        }
-        return self.format_and_send_request(data)
-
-    def get(self, field: str, value: str):
-        """Get bills from Sage Intacct
-
-        Parameters:
-            field (str): A parameter to filter bills by the field. (required).
-            value (str): A parameter to filter bills by the field - value. (required).
-
-        Returns:
-            Dict in bills schema.
-        """
-        data = {
-            'query': {
-                'object': 'APBILL',
-                'select': {
-                    'field': [
-                        'RECORDNO',
-                        'RECORDID',
-                        'RECORD_URL',
-                        'STATE',
-                        'VENDORID',
-                        'VENDORNAME',
-                        'DOCNUMBER',
-                        'TERMNAME',
-                        'WHENCREATED',
-                        'WHENPOSTED',
-                        "TOTALENTERED",
-                        'TOTALSELECTED',
-                        'TOTALPAID',
-                        'TOTALDUE',
-                        'WHENDUE',
-                        'WHENPAID',
-                        'RECPAYMENTDATE',
-                        'PAYMENTPRIORITY',
-                        'DESCRIPTION',
-                        'ONHOLD',
-                        'BASECURR',
-                        'CURRENCY',
-                        'WHENMODIFIED',
-                        'DUE_IN_DAYS',
-                        'PRBATCH',
-                    ]
-                },
-                'filter': {
-                    'equalto': {
-                        'field': field,
-                        'value': value
-                    }
-                },
-                'pagesize': '2000'
-            }
-        }
-
-        return self.format_and_send_request(data)['data']
+    def __init__(self):
+        ApiBase.__init__(self, dimension='APBILL')
 
     def get_all(self):
         """Get all bills from Sage Intacct

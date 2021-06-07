@@ -11,17 +11,21 @@ import re
 import xmltodict
 import requests
 
-from ..exceptions import *
+from ..exceptions import SageIntacctSDKError, ExpiredTokenError, InvalidTokenError, NoPrivilegeError,\
+    WrongParamsError, NotFoundItemError, InternalServerError
+from .constants import dimensions_fields_mapping
 
 class ApiBase:
     """The base class for all API classes."""
 
-    def __init__(self):
-        self.__access_token = None
+    def __init__(self, dimension: str = None, pagesize: int = 2000, post_legacy_method: str = None):
         self.__sender_id = None
         self.__sender_password = None
         self.__session_id = None
         self.__api_url = 'https://api.intacct.com/ia/xml/xmlgw.phtml'
+        self.__dimension = dimension
+        self.__pagesize = pagesize
+        self.__post_legacy_method = post_legacy_method
 
     def set_sender_id(self, sender_id: str):
         """
@@ -39,7 +43,7 @@ class ApiBase:
         """
         self.__sender_password = sender_password
 
-    def _get_session_id(self, user_id: str, company_id: str, user_password: str):
+    def get_session_id(self, user_id: str, company_id: str, user_password: str):
         """
         Sets the session id for APIs
         :param access_token: acceess token (JWT)
@@ -75,7 +79,7 @@ class ApiBase:
             }
         }
 
-        response = self._post_request(dict_body, self.__api_url)
+        response = self.__post_request(dict_body, self.__api_url)
 
         if response['authentication']['status'] == 'success':
             session_details = response['result']['data']['api']
@@ -95,7 +99,7 @@ class ApiBase:
         """
         self.__session_id = session_id
 
-    def support_id_msg(self, errormessages):
+    def __support_id_msg(self, errormessages):
         """Finds whether the error messages is list / dict and assign type and error assignment.
 
         Parameters:
@@ -114,7 +118,7 @@ class ApiBase:
 
         return error
 
-    def decode_support_id(self, errormessages):
+    def __decode_support_id(self, errormessages):
         """Decodes Support ID.
 
         Parameters:
@@ -123,7 +127,7 @@ class ApiBase:
         Returns:
             Same error message with decoded Support ID.
         """
-        support_id_msg = self.support_id_msg(errormessages)
+        support_id_msg = self.__support_id_msg(errormessages)
         data_type = support_id_msg['type']
         error = support_id_msg['error']
         if (error and error['description2']):
@@ -141,7 +145,7 @@ class ApiBase:
 
         return errormessages
 
-    def _post_request(self, dict_body: dict, api_url: str):
+    def __post_request(self, dict_body: dict, api_url: str):
         """Create a HTTP post request.
 
         Parameters:
@@ -159,7 +163,7 @@ class ApiBase:
 
         response = requests.post(api_url, headers=api_headers, data=body)
 
-        parsed_xml = xmltodict.parse(response.text)
+        parsed_xml = xmltodict.parse(response.text, force_list={self.__dimension})
         parsed_response = json.loads(json.dumps(parsed_xml))
 
         if response.status_code == 200:
@@ -167,7 +171,7 @@ class ApiBase:
                 api_response = parsed_response['response']['operation']
 
             if parsed_response['response']['control']['status'] == 'failure':
-                exception_msg = self.decode_support_id(parsed_response['response']['errormessage'])
+                exception_msg = self.__decode_support_id(parsed_response['response']['errormessage'])
                 raise WrongParamsError('Some of the parameters are wrong', exception_msg)
 
             if api_response['authentication']['status'] == 'failure':
@@ -177,7 +181,7 @@ class ApiBase:
                 return api_response
 
             if api_response['result']['status'] == 'failure':
-                exception_msg = self.decode_support_id(api_response['result']['errormessage'])
+                exception_msg = self.__decode_support_id(api_response['result']['errormessage'])
 
                 for error in exception_msg['error']:
                     if error['description2'] and 'You do not have permission for API' in error['description2']:
@@ -212,7 +216,7 @@ class ApiBase:
             data (dict): HTTP POST body data for the wanted API.
 
         Returns:
-            A response from the _post_request (dict).
+            A response from the __post_request (dict).
         """
 
         key = next(iter(data))
@@ -242,5 +246,97 @@ class ApiBase:
             }
         }
 
-        response = self._post_request(dict_body, self.__api_url)
+        response = self.__post_request(dict_body, self.__api_url)
         return response['result']
+
+    def post(self, data: Dict):
+        if self.__dimension in ('CCTRANSACTION', 'EPPAYMENT'):
+            return self.__construct_post_legacy_payload(data)
+
+        return self.__construct_post_payload(data)
+    
+    def __construct_post_payload(self, data: Dict):
+        payload = {
+            'create': {
+                self.__dimension: data
+            }
+        }
+
+        return self.format_and_send_request(payload)
+
+    def __construct_post_legacy_payload(self, data: Dict):
+        payload = {
+            self.__post_legacy_method: data
+        }
+
+        return self.format_and_send_request(payload)
+
+    def count(self):
+        get_count = {
+            'query': {
+                'object': self.__dimension,
+                'select': {
+                    'field': 'RECORDNO'
+                },
+                'pagesize': '1'
+            }
+        }
+
+        response = self.format_and_send_request(get_count)
+        return int(response['data']['@totalcount'])
+
+    def get(self, field: str, value: str, fields: list = None):
+        """Get data from Sage Intacct based on filter.
+
+        Parameters:
+            field (str): A parameter to filter by the field. (required).
+            value (str): A parameter to filter by the field - value. (required).
+
+        Returns:
+            Dict.
+        """
+        data = {
+            'readByQuery': {
+                'object': self.__dimension,
+                'fields': ','.join(fields) if fields else '*',
+                'query': "{0} = '{1}'".format(field, value),
+                'pagesize': '1000'
+            }
+        }
+
+        return self.format_and_send_request(data)['data']
+
+    def get_all(self, field: str = None, value: str = None, fields: list = None):
+        """Get all data from Sage Intacct
+
+        Returns:
+            List of Dict.
+        """
+        complete_data = []
+        count = self.count()
+        pagesize = self.__pagesize
+
+        for offset in range(0, count, pagesize):
+            data = {
+                'query': {
+                    'object': self.__dimension,
+                    'select': {
+                        'field': fields if fields else dimensions_fields_mapping[self.__dimension]
+                    },
+                    'pagesize': pagesize,
+                    'offset': offset
+                }
+            }
+
+            if field and value:
+                data['query']['filter'] = {
+                    'equalto': {
+                        'field': field,
+                        'value': value
+                    }
+                }
+
+            paginated_data = self.format_and_send_request(data)['data'][self.__dimension]
+            complete_data.extend(paginated_data)
+
+        return complete_data
