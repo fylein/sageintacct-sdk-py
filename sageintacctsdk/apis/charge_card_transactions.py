@@ -11,23 +11,6 @@ class ChargeCardTransactions(ApiBase):
     def __init__(self):
         ApiBase.__init__(self, dimension='CCTRANSACTION', post_legacy_method='record_cctransaction')
 
-    def get_all(self):
-        """Get all charge card transactions from Sage Intacct
-
-        Returns:
-            List of Dict in Charge Card Transactions schema.
-        """
-        data = {
-            'readByQuery': {
-                'object': 'CCTRANSACTION',
-                'fields': '*',
-                'query': None,
-                'pagesize': '1000'
-            }
-        }
-
-        return self.format_and_send_request(data)['data']['cctransaction']
-
     def update_attachment(self, key: str, supdocid: str):
         """Update charge card transactions with supdocid
 
