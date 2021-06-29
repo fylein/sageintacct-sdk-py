@@ -11,23 +11,6 @@ class Bills(ApiBase):
     def __init__(self):
         ApiBase.__init__(self, dimension='APBILL')
 
-    def get_all(self):
-        """Get all bills from Sage Intacct
-
-        Returns:
-            List of Dict in Bills schema.
-        """
-        data = {
-            'readByQuery': {
-                'object': 'APBILL',
-                'fields': '*',
-                'query': None,
-                'pagesize': '1000'
-            }
-        }
-
-        return self.format_and_send_request(data)['data']['apbill']
-
     def update_attachment(self, recordno: str, supdocid: str):
         """Update bill with supdocid
 
