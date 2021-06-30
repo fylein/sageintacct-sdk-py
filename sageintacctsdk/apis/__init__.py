@@ -44,6 +44,7 @@ __all_ = [
     'Customers',
     'Items',
     'APPayments',
+    'ARInvoice',
     'Reimbursements',
     'CheckingAccounts',
     'SavingsAccounts',
