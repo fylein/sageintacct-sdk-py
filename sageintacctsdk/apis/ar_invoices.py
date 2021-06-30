@@ -6,7 +6,7 @@ from typing import Dict
 from .api_base import ApiBase
 
 
-class ARInvoice(ApiBase):
+class ARInvoices(ApiBase):
     """Class for AR Invoice APIs."""
     def __init__(self):
         ApiBase.__init__(self, dimension='ARINVOICE')
