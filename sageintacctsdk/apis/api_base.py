@@ -43,7 +43,7 @@ class ApiBase:
         """
         self.__sender_password = sender_password
 
-    def get_session_id(self, user_id: str, company_id: str, user_password: str):
+    def get_session_id(self, user_id: str, company_id: str, user_password: str, entity_id: str = None):
         """
         Sets the session id for APIs
         :param access_token: acceess token (JWT)
@@ -66,7 +66,8 @@ class ApiBase:
                         'login': {
                             'userid': user_id,
                             'companyid': company_id,
-                            'password': user_password
+                            'password': user_password,
+                            'locationid': entity_id
                         }
                     },
                     'content': {
