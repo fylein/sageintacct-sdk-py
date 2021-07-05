@@ -1,8 +1,6 @@
 """
 Sage Intacct Location Entities
 """
-from typing import Dict
-
 from .api_base import ApiBase
 
 
