@@ -4,7 +4,7 @@ Sage Intacct Python SDK
 from .apis import ApiBase, Contacts, Locations, Employees, Accounts, ExpenseTypes, Attachments, ExpenseReports,\
     Vendors, Bills, Projects, Departments, ChargeCardAccounts, ChargeCardTransactions, Customers, Items,\
     APPayments, Reimbursements, CheckingAccounts, SavingsAccounts, Tasks, ExpensePaymentTypes, Dimensions,\
-    DimensionValues
+    DimensionValues, LocationEntities
 
 
 class SageIntacctSDK:
@@ -52,6 +52,7 @@ class SageIntacctSDK:
         self.dimension_values = DimensionValues()
         self.tasks = Tasks()
         self.expense_payment_types = ExpensePaymentTypes()
+        self.location_entities = LocationEntities()
 
         self.update_sender_id()
         self.update_sender_password()
@@ -85,6 +86,7 @@ class SageIntacctSDK:
         self.dimension_values.set_sender_id(self.__sender_id)
         self.tasks.set_sender_id(self.__sender_id)
         self.expense_payment_types.set_sender_id(self.__sender_id)
+        self.location_entities.set_sender_id(self.__sender_id)
 
     def update_sender_password(self):
         """
@@ -114,6 +116,7 @@ class SageIntacctSDK:
         self.dimension_values.set_sender_password(self.__sender_password)
         self.tasks.set_sender_password(self.__sender_password)
         self.expense_payment_types.set_sender_password(self.__sender_password)
+        self.location_entities.set_sender_password(self.__sender_password)
 
     def update_session_id(self):
         """
@@ -144,3 +147,4 @@ class SageIntacctSDK:
         self.dimension_values.set_session_id(self.__session_id)
         self.tasks.set_session_id(self.__session_id)
         self.expense_payment_types.set_session_id(self.__session_id)
+        self.location_entities.set_session_id(self.__session_id)
