@@ -12,7 +12,8 @@ class SageIntacctSDK:
     Sage Intacct SDK
     """
 
-    def __init__(self, sender_id: str, sender_password: str, user_id: str, company_id: str, user_password: str):
+    def __init__(self, sender_id: str, sender_password: str, user_id: str,
+        company_id: str, user_password: str, entity_id: str=None):
         """
         Initialize connection to Sage Intacct
         :param sender_id: Sage Intacct sender id
@@ -20,6 +21,7 @@ class SageIntacctSDK:
         :param user_id: Sage Intacct user id
         :param company_id: Sage Intacct company id
         :param user_password: Sage Intacct user password
+        :param (optional) entity_id: Sage Intacct entity ID
         """
         # Initializing variables
         self.__sender_id = sender_id
@@ -27,6 +29,7 @@ class SageIntacctSDK:
         self.__user_id = user_id
         self.__company_id = company_id
         self.__user_password = user_password
+        self.__entity_id = entity_id
 
         self.api_base = ApiBase()
         self.contacts = Contacts()
@@ -125,7 +128,8 @@ class SageIntacctSDK:
         """
         Update the session id and change it in all API objects.
         """
-        self.__session_id = self.api_base.get_session_id(self.__user_id, self.__company_id, self.__user_password)
+        self.__session_id = self.api_base.get_session_id(
+            self.__user_id, self.__company_id, self.__user_password, self.__entity_id)
         self.api_base.set_session_id(self.__session_id)
         self.contacts.set_session_id(self.__session_id)
         self.locations.set_session_id(self.__session_id)
