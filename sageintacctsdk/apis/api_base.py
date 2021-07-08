@@ -285,6 +285,26 @@ class ApiBase:
         response = self.format_and_send_request(get_count)
         return int(response['data']['@totalcount'])
 
+    def read_by_query(self, fields: list = None):
+        """Read by Query from Sage Intacct
+
+        Parameters:
+            fields (list): Get selective fields to be returned. (optional).
+
+        Returns:
+            Dict.
+        """
+        payload = {
+            'readByQuery': {
+                'object': self.__dimension,
+                'fields': ','.join(fields) if fields else '*',
+                'query': None,
+                'pagesize': '1000'
+            }
+        }
+
+        return self.format_and_send_request(payload)
+
     def get(self, field: str, value: str, fields: list = None):
         """Get data from Sage Intacct based on filter.
 

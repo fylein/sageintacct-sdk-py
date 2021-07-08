@@ -107,4 +107,6 @@ venv.bak/
 # Test files
 dry_run.py
 test.py
+test_scripts/
+
 /.idea/
