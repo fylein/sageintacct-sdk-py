@@ -306,7 +306,7 @@ dimensions_fields_mapping = {
         'TRX_ENTITYDUE',
         'CUSTMESSAGEID'
         'CUSTMESSAGE.MESSAGE',
-        'DELIVERY_OPTIONS'
+        'DELIVERY_OPTIONS',
         'DOCNUMBER',
         'DESCRIPTION',
         'DESCRIPTION2',
@@ -318,7 +318,7 @@ dimensions_fields_mapping = {
         'WHENDISCOUNT',
         'WHENDUE',
         'WHENPAID',
-        'BASECURR'
+        'BASECURR',
         'CURRENCY',
         'EXCH_RATE_DATE',
         'EXCH_RATE_TYPE_ID',
@@ -473,7 +473,7 @@ dimensions_fields_mapping = {
         'STATE',
         'CUSTOMERID',
         'CUSTOMERNAME',
-        'CUSTMESSAGEID'
+        'CUSTMESSAGEID',
         'CUSTMESSAGE.MESSAGE',
         'DOCNUMBER',
         'DESCRIPTION',
@@ -484,7 +484,7 @@ dimensions_fields_mapping = {
         'WHENDISCOUNT',
         'WHENDUE',
         'WHENPAID',
-        'BASECURR'
+        'BASECURR',
         'CURRENCY',
         'EXCH_RATE_DATE',
         'EXCH_RATE_TYPE_ID',
