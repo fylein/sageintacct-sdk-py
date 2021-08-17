@@ -27,6 +27,7 @@ from .dimension_values import DimensionValues
 from .tasks import Tasks
 from .expense_payment_types import ExpensePaymentTypes
 from .location_entities import LocationEntities
+from .tax_details import TaxDetails
 
 __all_ = [
     'ApiBase',
@@ -54,5 +55,6 @@ __all_ = [
     'DimensionValues',
     'Tasks',
     'ExpensePaymentTypes',
-    'LocationEntities'
+    'LocationEntities',
+    'TaxDetails'
 ]

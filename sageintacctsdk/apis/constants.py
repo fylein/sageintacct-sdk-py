@@ -325,6 +325,28 @@ dimensions_fields_mapping = {
         'ADDRESSCOUNTRYDEFAULT',
         'RECORD_URL'
     ],
+    'TAXDETAIL': [
+        'RECORDNO',
+        'DETAILID',
+        'TAXUID',
+        'DESCRIPTION',
+        'TAXTYPE',
+        'VALUE',
+        'MINTAXABLE',
+        'MAXTAXABLE',
+        'INCLUDE',
+        'MINTAX',
+        'MAXTAX',
+        'GLACCOUNT',
+        'TAXAUTHORITY',
+        'STATUS',
+        'REVERSECHARGE',
+        'TAXRATE',
+        'TAXSOLUTIONID',
+        'MEGAENTITYKEY',
+        'MEGAENTITYID',
+        'MEGAENTITYNAME'
+    ],
     'ARINVOICE': [
         'RECORDNO',
         'RECORDID',
