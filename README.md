@@ -27,7 +27,7 @@ connection = SageIntacctSDK(
     user_password='<YOUR USER PASSWORD>'
 )
 ```
-2. After that you'll be able to access any of the 22 API classes: accounts, ap_payments, ar_invoices, attachments, bills, charge_card_accounts, charge_card_transactions, checking_accounts, contacts, customers, departments, employees, expense_payment_types, expense_reports, expense_types, items, locations, projects, reimbursements, savings_accounts, tasks, and vendors.
+2. After that you'll be able to access any of the 22 API classes: accounts, ap_payments, ar_invoices, attachments, bills, charge_card_accounts, charge_card_transactions, checking_accounts, contacts, customers, departments, employees, expense_payment_types, expense_reports, expense_types, items, locations, projects, reimbursements, savings_accounts, tasks,gl_detail and vendors.
 ```python
 """
 USAGE: <SageIntacctSDK INSTANCE>.<API_NAME>.<API_METHOD>(<PARAMETERS>)
@@ -64,6 +64,45 @@ response = connection.accounts.get_all()
 
 # Get details of Employee with EMPLOYEEID E101
 response = connection.employees.get(field='EMPLOYEEID', value='E101')
+```
+
+Several methods of querying the Sage Inacct API exists within the SDK.  Get_by_query allows you to specify multiple 
+critera using textual operators and booleans.  
+   
+Arguments are passed to and_filter, or_filter, or both. 
+
+See query structures here: https://developer.intacct.com/web-services/queries/
+
+Warnings:
+1.) The API is rate limited at 2000 records.
+
+2.) Operators can only be used once in a given boolean context. A filter cannot accept multiple 'equalto' operators
+for example.
+
+```python
+#
+# Returns Data Structure of object to perform query on.  Helpful to identify field keys.
+print(connection.gl_detail.get_lookup())
+
+# Returns records between specified dates
+query_tuple_between = [('between','ENTRY_DATE',['01/01/2020','12/31/2020'])]
+fields = ['RECORDNO','ENTRY_DATE','BATCH_NO','ACCOUNTNO','DEBITAMOUNT']
+response = connection.gl_detail.get_by_query(fields=fields,and_filter=query_tuple_between)
+
+# Returns records between specified accounts
+query_tuple_multiple =[('greaterthan','ACOUNTNO','6000'),('lessthan','ACCOUNTNO','7000')]
+response = connection.gl_detail.get_by_query(fields=fields,and_filter=query_tuple_multiple)
+
+# Returns records that match list
+in_list = ['1000','1100','1200']
+query_tuple_in = [('in','ACCOUNTNO',in_list)]
+response = connection.gl_detail.get_by_query(fields=fields,and_filter=query_tuple_in)
+
+
+
+
+
+
 ```
 
 See more details about the usage into the wiki pages of this project.

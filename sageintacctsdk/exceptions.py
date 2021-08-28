@@ -20,6 +20,23 @@ class SageIntacctSDKError(Exception):
         return repr(self.message)
 
 
+class SageIntacctSDKWarning(Warning):
+    """The base Warning class for SageIntacctSDK.
+
+       Parameters:
+           msg (str): Short description of the alert.
+           response: Error response from the API call.
+       """
+
+    def __init__(self, msg, response=None):
+        super(SageIntacctSDKWarning, self).__init__(msg)
+        self.message = msg
+        self.response = response
+
+    def __str__(self):
+        return repr(self.message)
+
+
 class ExpiredTokenError(SageIntacctSDKError):
     """Expired (old) access token, 498 error."""
 
@@ -42,3 +59,8 @@ class NotFoundItemError(SageIntacctSDKError):
 
 class InternalServerError(SageIntacctSDKError):
     """The rest SageIntacctSDK errors, 500 error."""
+
+
+# WARNING SECTION
+class DataIntegrityWarning(SageIntacctSDKWarning):
+    """Warns the user that a query did not return all records meeting specified criteria"""

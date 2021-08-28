@@ -4,6 +4,7 @@ API Base class with util functions
 import json
 import datetime
 import uuid
+from warnings import warn
 from typing import Dict
 from urllib.parse import unquote
 import re
@@ -11,9 +12,10 @@ import re
 import xmltodict
 import requests
 
-from ..exceptions import SageIntacctSDKError, ExpiredTokenError, InvalidTokenError, NoPrivilegeError,\
-    WrongParamsError, NotFoundItemError, InternalServerError
+from ..exceptions import SageIntacctSDKError, ExpiredTokenError, InvalidTokenError, NoPrivilegeError, \
+    WrongParamsError, NotFoundItemError, InternalServerError, DataIntegrityWarning
 from .constants import dimensions_fields_mapping
+
 
 class ApiBase:
     """The base class for all API classes."""
@@ -141,7 +143,7 @@ class ApiBase:
         # Converting dict to list even for single error response
         if data_type == 'dict':
             errormessages['error'] = [errormessages['error']]
-    
+
         errormessages['error'][0]['description2'] = message if message else None
 
         return errormessages
@@ -255,7 +257,7 @@ class ApiBase:
             return self.__construct_post_legacy_payload(data)
 
         return self.__construct_post_payload(data)
-    
+
     def __construct_post_payload(self, data: Dict):
         payload = {
             'create': {
@@ -361,3 +363,96 @@ class ApiBase:
             complete_data.extend(paginated_data)
 
         return complete_data
+
+    __query_filter = list[tuple[str, str, str]]
+
+    def get_by_query(self, fields: list[str], and_filter: __query_filter = None, or_filter: __query_filter = None):
+        """Get data from Sage Intacct using query method based on filter.
+
+        See sage intacct documentation here for query structures:
+        https://developer.intacct.com/web-services/queries/
+
+                Parameters:
+                    fields (str): A parameter to filter by the field. (required).
+                    and_filter (list(tuple)): List of tuple containing (operator (str),field (str), field (str))
+                    or_filter (list(tuple)): List of tuple containing (operator (str),field (str), field (str))
+
+                    if 'between' operators is used on and_filter or or_filter field must be submitted as
+                    [str,str]
+                    if 'in' operator is used field may be submitted as [str,str,str,...]
+
+                Returns:
+                    Dict.
+                """
+
+        if not and_filter and not or_filter:
+            data = {
+                'query': {
+                    'object': self.__dimension,
+                    'select': {'field': fields},
+                    'pagesize': '2000'
+                }}
+            return self.format_and_send_request(data)['data']
+
+        elif and_filter and or_filter:
+            formatted_filter = {'and': {}}
+            for operator, field, value in and_filter:
+                formatted_filter['and'].setdefault(operator, {}).update({'field': field, 'value': value})
+            formatted_filter['and']['or'] = {}
+            for operator, field, value in or_filter:
+                formatted_filter['and']['or'].setdefault(operator, {}).update({'field': field, 'value': value})
+            data = {
+                'query': {
+                    'object': self.__dimension,
+                    'select': {'field': fields},
+                    'filter': formatted_filter,
+                    'pagesize': '2000'
+                }}
+            pprint(xmltodict.unparse(data))
+            return self.format_and_send_request(data)['data']
+
+        elif and_filter or or_filter:
+            if and_filter:
+                if len(and_filter) > 1:
+                    formatted_filter = {'and': {}}
+                    for operator, field, value in and_filter:
+                        formatted_filter['and'].setdefault(operator, {}).update({'field': field, 'value': value})
+                else:
+                    formatted_filter = {}
+                    for operator, field, value in and_filter:
+                        formatted_filter.setdefault(operator, {}).update({'field': field, 'value': value})
+            if or_filter:
+                if len(or_filter) > 1:
+                    formatted_filter = {'or': {}}
+                    for operator, field, value in or_filter:
+                        formatted_filter['or'].setdefault(operator, {}).update({'field': field, 'value': value})
+                else:
+                    formatted_filter = {}
+                    for operator, field, value in or_filter:
+                        formatted_filter.setdefault(operator, {}).update({'field': field, 'value': value})
+
+            data = {
+                'query': {
+                    'object': self.__dimension,
+                    'select': {'field': fields},
+                    'filter': formatted_filter,
+                    'pagesize': '2000'
+                }}
+            response = self.format_and_send_request(data)['data']
+            if response['@numremaining'] != '0':
+                message = 'Your query did not return all results due to API limits. Missing: ' + \
+                          response['@numremaining']+' records'
+                warn(message=message,category=DataIntegrityWarning)
+            return self.format_and_send_request(data)['data']
+
+    def get_lookup(self):
+        """ Returns all fields with attributes from the object called on.
+
+                Parameters:
+                    self
+                Returns:
+                    Dict.
+        """
+
+        data = {'lookup': {'object': self.__dimension}}
+        return self.format_and_send_request(data)['data']
