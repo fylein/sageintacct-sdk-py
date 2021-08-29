@@ -384,6 +384,12 @@ class ApiBase:
                 Returns:
                     Dict.
                 """
+        def warn_and_return(response):
+            if response['@numremaining'] != '0':
+                message = 'Your query did not return all results due to API limits. Missing: ' + \
+                          response['@numremaining'] + ' records'
+                warn(message=message, category=DataIntegrityWarning)
+            return self.format_and_send_request(data)['data']
 
         if not and_filter and not or_filter:
             data = {
@@ -392,7 +398,8 @@ class ApiBase:
                     'select': {'field': fields},
                     'pagesize': '2000'
                 }}
-            return self.format_and_send_request(data)['data']
+            response = self.format_and_send_request(data)['data']
+            return warn_and_return(response)
 
         elif and_filter and or_filter:
             formatted_filter = {'and': {}}
@@ -408,8 +415,8 @@ class ApiBase:
                     'filter': formatted_filter,
                     'pagesize': '2000'
                 }}
-            pprint(xmltodict.unparse(data))
-            return self.format_and_send_request(data)['data']
+            response = self.format_and_send_request(data)['data']
+            return warn_and_return(response)
 
         elif and_filter or or_filter:
             if and_filter:
@@ -439,11 +446,7 @@ class ApiBase:
                     'pagesize': '2000'
                 }}
             response = self.format_and_send_request(data)['data']
-            if response['@numremaining'] != '0':
-                message = 'Your query did not return all results due to API limits. Missing: ' + \
-                          response['@numremaining']+' records'
-                warn(message=message,category=DataIntegrityWarning)
-            return self.format_and_send_request(data)['data']
+            return warn_and_return(response)
 
     def get_lookup(self):
         """ Returns all fields with attributes from the object called on.
