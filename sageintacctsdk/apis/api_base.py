@@ -5,7 +5,7 @@ import json
 import datetime
 import uuid
 from warnings import warn
-from typing import Dict
+from typing import Dict, List, Tuple
 from urllib.parse import unquote
 import re
 
@@ -338,7 +338,6 @@ class ApiBase:
         complete_data = []
         count = self.count()
         pagesize = self.__pagesize
-
         for offset in range(0, count, pagesize):
             data = {
                 'query': {
@@ -364,9 +363,12 @@ class ApiBase:
 
         return complete_data
 
-    __query_filter = list[tuple[str, str, str]]
+    __query_filter = List[Tuple[str, str, str]]
 
-    def get_by_query(self, fields: list[str], and_filter: __query_filter = None, or_filter: __query_filter = None):
+    def get_by_query(self, fields: List[str] = None,
+                     and_filter: __query_filter = None,
+                     or_filter: __query_filter = None,
+                     filter_payload: dict = None):
         """Get data from Sage Intacct using query method based on filter.
 
         See sage intacct documentation here for query structures:
@@ -374,9 +376,9 @@ class ApiBase:
 
                 Parameters:
                     fields (str): A parameter to filter by the field. (required).
-                    and_filter (list(tuple)): List of tuple containing (operator (str),field (str), field (str))
-                    or_filter (list(tuple)): List of tuple containing (operator (str),field (str), field (str))
-
+                    and_filter (list(tuple)): List of tuple containing (operator (str),field (str), value (str))
+                    or_filter (list(tuple)): List of tuple containing (operator (str),field (str), value (str))
+                    filter_payload (dict): Formatted query payload in dictionary format.
                     if 'between' operators is used on and_filter or or_filter field must be submitted as
                     [str,str]
                     if 'in' operator is used field may be submitted as [str,str,str,...]
@@ -384,69 +386,63 @@ class ApiBase:
                 Returns:
                     Dict.
                 """
-        def warn_and_return(response):
-            if response['@numremaining'] != '0':
-                message = 'Your query did not return all results due to API limits. Missing: ' + \
-                          response['@numremaining'] + ' records'
-                warn(message=message, category=DataIntegrityWarning)
-            return self.format_and_send_request(data)['data']
 
-        if not and_filter and not or_filter:
-            data = {
-                'query': {
-                    'object': self.__dimension,
-                    'select': {'field': fields},
-                    'pagesize': '2000'
-                }}
-            response = self.format_and_send_request(data)['data']
-            return warn_and_return(response)
-
-        elif and_filter and or_filter:
+        complete_data = []
+        count = self.count()
+        pagesize = self.__pagesize
+        offset = 0
+        formatted_filter = filter_payload
+        data = {
+            'query': {
+                'object': self.__dimension,
+                'select': {
+                    'field': fields if fields else dimensions_fields_mapping[self.__dimension]
+                },
+                'pagesize': pagesize,
+                'offset': offset
+            }
+        }
+        if and_filter and or_filter:
             formatted_filter = {'and': {}}
             for operator, field, value in and_filter:
                 formatted_filter['and'].setdefault(operator, {}).update({'field': field, 'value': value})
             formatted_filter['and']['or'] = {}
             for operator, field, value in or_filter:
                 formatted_filter['and']['or'].setdefault(operator, {}).update({'field': field, 'value': value})
-            data = {
-                'query': {
-                    'object': self.__dimension,
-                    'select': {'field': fields},
-                    'filter': formatted_filter,
-                    'pagesize': '2000'
-                }}
-            response = self.format_and_send_request(data)['data']
-            return warn_and_return(response)
 
-        elif and_filter or or_filter:
-            if and_filter:
-                if len(and_filter) > 1:
-                    formatted_filter = {'and': {}}
-                    for operator, field, value in and_filter:
-                        formatted_filter['and'].setdefault(operator, {}).update({'field': field, 'value': value})
-                else:
-                    formatted_filter = {}
-                    for operator, field, value in and_filter:
-                        formatted_filter.setdefault(operator, {}).update({'field': field, 'value': value})
-            if or_filter:
-                if len(or_filter) > 1:
-                    formatted_filter = {'or': {}}
-                    for operator, field, value in or_filter:
-                        formatted_filter['or'].setdefault(operator, {}).update({'field': field, 'value': value})
-                else:
-                    formatted_filter = {}
-                    for operator, field, value in or_filter:
-                        formatted_filter.setdefault(operator, {}).update({'field': field, 'value': value})
+        elif and_filter:
+            if len(and_filter) > 1:
+                formatted_filter = {'and': {}}
+                for operator, field, value in and_filter:
+                    formatted_filter['and'].setdefault(operator, {}).update({'field': field, 'value': value})
+            else:
+                formatted_filter = {}
+                for operator, field, value in and_filter:
+                    formatted_filter.setdefault(operator, {}).update({'field': field, 'value': value})
+        elif or_filter:
+            if len(or_filter) > 1:
+                formatted_filter = {'or': {}}
+                for operator, field, value in or_filter:
+                    formatted_filter['or'].setdefault(operator, {}).update({'field': field, 'value': value})
+            else:
+                formatted_filter = {}
+                for operator, field, value in or_filter:
+                    formatted_filter.setdefault(operator, {}).update({'field': field, 'value': value})
 
-            data = {
-                'query': {
-                    'object': self.__dimension,
-                    'select': {'field': fields},
-                    'filter': formatted_filter,
-                    'pagesize': '2000'
-                }}
-            response = self.format_and_send_request(data)['data']
-            return warn_and_return(response)
+        if formatted_filter:
+            data['query']['filter'] = formatted_filter
+        print(data)
+        for offset in range(0, count, pagesize):
+            data['offset'] = offset
+            paginated_data = self.format_and_send_request(data)['data']
+            complete_data.extend(paginated_data[self.__dimension])
+            filtered_total = int(paginated_data['@totalcount'])
+            if paginated_data['@numremaining'] == '0':
+                break
+        if filtered_total != len(complete_data):
+            warn(message='Your data may not be complete. Records returned do not equal total query record count',
+                 category=DataIntegrityWarning)
+        return complete_data
 
     def get_lookup(self):
         """ Returns all fields with attributes from the object called on.

@@ -27,7 +27,7 @@ connection = SageIntacctSDK(
     user_password='<YOUR USER PASSWORD>'
 )
 ```
-2. After that you'll be able to access any of the 22 API classes: accounts, ap_payments, ar_invoices, attachments, bills, charge_card_accounts, charge_card_transactions, checking_accounts, contacts, customers, departments, employees, expense_payment_types, expense_reports, expense_types, items, locations, projects, reimbursements, savings_accounts, tasks,gl_detail and vendors.
+2. After that you'll be able to access any of the 23 API classes: accounts, ap_payments, ar_invoices, attachments, bills, charge_card_accounts, charge_card_transactions, checking_accounts, contacts, customers, departments, employees, expense_payment_types, expense_reports, expense_types, items, locations, projects, reimbursements, savings_accounts, tasks,gl_detail and vendors.
 ```python
 """
 USAGE: <SageIntacctSDK INSTANCE>.<API_NAME>.<API_METHOD>(<PARAMETERS>)
@@ -66,18 +66,21 @@ response = connection.accounts.get_all()
 response = connection.employees.get(field='EMPLOYEEID', value='E101')
 ```
 
-Several methods of querying the Sage Inacct API exists within the SDK.  Get_by_query allows you to specify multiple 
-critera using textual operators and booleans.  
+## Advanced Queries
+Several methods of querying the Sage Inacct API exists within the SDK.  <get_by_query> allows you to specify multiple 
+critera using textual mathematical operators and logical filters.  
    
-Arguments are passed to and_filter, or_filter, or both. 
+Arguments are passed to and_filter, or_filter, or both.  The and_filter is the default operator to pass filters to.
+For example if you want to pass a single operator without a logical context you would pass it to and_filter.
+
+You must pass multiple operators to or_filter.
+
+You may also format your own filter payload in accordance with API documentation and pass to the function.
 
 See query structures here: https://developer.intacct.com/web-services/queries/
 
-Warnings:
-1.) The API is rate limited at 2000 records.
-
-2.) Operators can only be used once in a given boolean context. A filter cannot accept multiple 'equalto' operators
-for example.
+Warning: Operators can only be used once in a given logical context. and_filter cannot accept multiple 'equalto' operators
+for example.  This is an API limitation.
 
 ```python
 #
@@ -98,8 +101,8 @@ in_list = ['1000','1100','1200']
 query_tuple_in = [('in','ACCOUNTNO',in_list)]
 response = connection.gl_detail.get_by_query(fields=fields,and_filter=query_tuple_in)
 
-
-
+payload = {'and':{'equalto':{'field':'ACCOUNTNO','value':'1000'}}}
+response = connnection.gl_detail.get_by_query(filter_payload=payload)
 
 
 
