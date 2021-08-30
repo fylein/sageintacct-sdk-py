@@ -4,16 +4,18 @@ API Base class with util functions
 import json
 import datetime
 import uuid
-from typing import Dict
+from warnings import warn
+from typing import Dict, List, Tuple
 from urllib.parse import unquote
 import re
 
 import xmltodict
 import requests
 
-from ..exceptions import SageIntacctSDKError, ExpiredTokenError, InvalidTokenError, NoPrivilegeError,\
-    WrongParamsError, NotFoundItemError, InternalServerError
+from ..exceptions import SageIntacctSDKError, ExpiredTokenError, InvalidTokenError, NoPrivilegeError, \
+    WrongParamsError, NotFoundItemError, InternalServerError, DataIntegrityWarning
 from .constants import dimensions_fields_mapping
+
 
 class ApiBase:
     """The base class for all API classes."""
@@ -141,7 +143,7 @@ class ApiBase:
         # Converting dict to list even for single error response
         if data_type == 'dict':
             errormessages['error'] = [errormessages['error']]
-    
+
         errormessages['error'][0]['description2'] = message if message else None
 
         return errormessages
@@ -255,7 +257,7 @@ class ApiBase:
             return self.__construct_post_legacy_payload(data)
 
         return self.__construct_post_payload(data)
-    
+
     def __construct_post_payload(self, data: Dict):
         payload = {
             'create': {
@@ -336,7 +338,6 @@ class ApiBase:
         complete_data = []
         count = self.count()
         pagesize = self.__pagesize
-
         for offset in range(0, count, pagesize):
             data = {
                 'query': {
@@ -361,3 +362,96 @@ class ApiBase:
             complete_data.extend(paginated_data)
 
         return complete_data
+
+    __query_filter = List[Tuple[str, str, str]]
+
+    def get_by_query(self, fields: List[str] = None,
+                     and_filter: __query_filter = None,
+                     or_filter: __query_filter = None,
+                     filter_payload: dict = None):
+        """Get data from Sage Intacct using query method based on filter.
+
+        See sage intacct documentation here for query structures:
+        https://developer.intacct.com/web-services/queries/
+
+                Parameters:
+                    fields (str): A parameter to filter by the field. (required).
+                    and_filter (list(tuple)): List of tuple containing (operator (str),field (str), value (str))
+                    or_filter (list(tuple)): List of tuple containing (operator (str),field (str), value (str))
+                    filter_payload (dict): Formatted query payload in dictionary format.
+                    if 'between' operators is used on and_filter or or_filter field must be submitted as
+                    [str,str]
+                    if 'in' operator is used field may be submitted as [str,str,str,...]
+
+                Returns:
+                    Dict.
+                """
+
+        complete_data = []
+        count = self.count()
+        pagesize = self.__pagesize
+        offset = 0
+        formatted_filter = filter_payload
+        data = {
+            'query': {
+                'object': self.__dimension,
+                'select': {
+                    'field': fields if fields else dimensions_fields_mapping[self.__dimension]
+                },
+                'pagesize': pagesize,
+                'offset': offset
+            }
+        }
+        if and_filter and or_filter:
+            formatted_filter = {'and': {}}
+            for operator, field, value in and_filter:
+                formatted_filter['and'].setdefault(operator, {}).update({'field': field, 'value': value})
+            formatted_filter['and']['or'] = {}
+            for operator, field, value in or_filter:
+                formatted_filter['and']['or'].setdefault(operator, {}).update({'field': field, 'value': value})
+
+        elif and_filter:
+            if len(and_filter) > 1:
+                formatted_filter = {'and': {}}
+                for operator, field, value in and_filter:
+                    formatted_filter['and'].setdefault(operator, {}).update({'field': field, 'value': value})
+            else:
+                formatted_filter = {}
+                for operator, field, value in and_filter:
+                    formatted_filter.setdefault(operator, {}).update({'field': field, 'value': value})
+        elif or_filter:
+            if len(or_filter) > 1:
+                formatted_filter = {'or': {}}
+                for operator, field, value in or_filter:
+                    formatted_filter['or'].setdefault(operator, {}).update({'field': field, 'value': value})
+            else:
+                formatted_filter = {}
+                for operator, field, value in or_filter:
+                    formatted_filter.setdefault(operator, {}).update({'field': field, 'value': value})
+
+        if formatted_filter:
+            data['query']['filter'] = formatted_filter
+
+        for offset in range(0, count, pagesize):
+            data['offset'] = offset
+            paginated_data = self.format_and_send_request(data)['data']
+            complete_data.extend(paginated_data[self.__dimension])
+            filtered_total = int(paginated_data['@totalcount'])
+            if paginated_data['@numremaining'] == '0':
+                break
+        if filtered_total != len(complete_data):
+            warn(message='Your data may not be complete. Records returned do not equal total query record count',
+                 category=DataIntegrityWarning)
+        return complete_data
+
+    def get_lookup(self):
+        """ Returns all fields with attributes from the object called on.
+
+                Parameters:
+                    self
+                Returns:
+                    Dict.
+        """
+
+        data = {'lookup': {'object': self.__dimension}}
+        return self.format_and_send_request(data)['data']

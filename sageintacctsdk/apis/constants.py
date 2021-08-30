@@ -463,5 +463,37 @@ dimensions_fields_mapping = {
         'MEGAENTITYKEY',
         'MEGAENTITYID',
         'MEGAENTITYNAME'
-    ]
+    ],
+    'GLDETAIL': ['RECORDNO',
+                 'BATCHKEY',
+                 'BATCH_DATE',
+                 'BATCH_TITLE',
+                 'SYMBOL',
+                 'BATCH_NO',
+                 'BOOKID',
+                 'CHILDENTITY',
+                 'MODIFIED',
+                 'REFERENCENO',
+                 'ADJ',
+                 'MODULEKEY',
+                 'OWNERSHIPKEY',
+                 'LINE_NO',
+                 'ENTRY_DATE',
+                 'TR_TYPE',
+                 'DOCUMENT',
+                 'ACCOUNTNO',
+                 'ACCOUNTTITLE',
+                 'STATISTICAL',
+                 'DEPARTMENTID',
+                 'DEPARTMENTTITLE',
+                 'LOCATIONID',
+                 'LOCATIONNAME',
+                 'CURRENCY',
+                 'BASECURR',
+                 'DESCRIPTION',
+                 'DEBITAMOUNT',
+                 'CREDITAMOUNT',
+                 'AMOUNT'
+                 ]
+
 }

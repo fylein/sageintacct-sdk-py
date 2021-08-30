@@ -28,8 +28,9 @@ from .tasks import Tasks
 from .expense_payment_types import ExpensePaymentTypes
 from .location_entities import LocationEntities
 from .tax_details import TaxDetails
+from .gl_detail import GLDetail
 
-__all_ = [
+__all__ = [
     'ApiBase',
     'Contacts',
     'Locations',
@@ -56,5 +57,6 @@ __all_ = [
     'Tasks',
     'ExpensePaymentTypes',
     'LocationEntities',
-    'TaxDetails'
+    'TaxDetails',
+    'GLDetail'
 ]
