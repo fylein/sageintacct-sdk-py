@@ -7,6 +7,6 @@ from .api_base import ApiBase
 
 
 class GLDetail(ApiBase):
-    """Class for AP Payments APIs."""
+    """Class for GL Detail APIs."""
     def __init__(self):
         ApiBase.__init__(self, dimension='GLDETAIL')

@@ -431,7 +431,7 @@ class ApiBase:
 
         if formatted_filter:
             data['query']['filter'] = formatted_filter
-        print(data)
+
         for offset in range(0, count, pagesize):
             data['offset'] = offset
             paginated_data = self.format_and_send_request(data)['data']
