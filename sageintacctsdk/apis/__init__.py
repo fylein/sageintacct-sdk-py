@@ -29,6 +29,7 @@ from .expense_payment_types import ExpensePaymentTypes
 from .location_entities import LocationEntities
 from .tax_details import TaxDetails
 from .gl_detail import GLDetail
+from .classes import Classes
 
 __all__ = [
     'ApiBase',
@@ -58,5 +59,6 @@ __all__ = [
     'ExpensePaymentTypes',
     'LocationEntities',
     'TaxDetails',
-    'GLDetail'
+    'GLDetail',
+    'Classes'
 ]
