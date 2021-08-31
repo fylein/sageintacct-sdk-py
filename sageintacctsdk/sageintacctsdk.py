@@ -4,7 +4,7 @@ Sage Intacct Python SDK
 from .apis import ApiBase, Contacts, Locations, Employees, Accounts, ExpenseTypes, Attachments, ExpenseReports,\
     Vendors, Bills, Projects, Departments, ChargeCardAccounts, ChargeCardTransactions, Customers, Items,\
     APPayments, Reimbursements, CheckingAccounts, SavingsAccounts, Tasks, ExpensePaymentTypes, Dimensions,\
-    DimensionValues, LocationEntities, ARInvoices, TaxDetails, GLDetail
+    DimensionValues, LocationEntities, ARInvoices, TaxDetails, GLDetail, Classes
 
 
 class SageIntacctSDK:
@@ -59,6 +59,7 @@ class SageIntacctSDK:
         self.location_entities = LocationEntities()
         self.tax_details = TaxDetails()
         self.gl_detail = GLDetail()
+        self.classes = Classes()
         self.update_sender_id()
         self.update_sender_password()
         self.update_session_id()
@@ -95,6 +96,8 @@ class SageIntacctSDK:
         self.location_entities.set_sender_id(self.__sender_id)
         self.tax_details.set_sender_id(self.__sender_id)
         self.gl_detail.set_sender_id(self.__sender_id)
+        self.classes.set_sender_id(self.__sender_id)
+
     def update_sender_password(self):
         """
         Update the sender password in all API objects.
@@ -127,6 +130,8 @@ class SageIntacctSDK:
         self.location_entities.set_sender_password(self.__sender_password)
         self.tax_details.set_sender_password(self.__sender_password)
         self.gl_detail.set_sender_password(self.__sender_password)
+        self.classes.set_sender_password(self.__sender_password)
+
     def update_session_id(self):
         """
         Update the session id and change it in all API objects.
@@ -161,3 +166,4 @@ class SageIntacctSDK:
         self.location_entities.set_session_id(self.__session_id)
         self.tax_details.set_session_id(self.__session_id)
         self.gl_detail.set_session_id(self.__session_id)
+        self.classes.set_session_id(self.__session_id)
