@@ -433,7 +433,7 @@ class ApiBase:
             data['query']['filter'] = formatted_filter
 
         for offset in range(0, count, pagesize):
-            data['offset'] = offset
+            data['query']['offset'] = offset
             paginated_data = self.format_and_send_request(data)['data']
             complete_data.extend(paginated_data[self.__dimension])
             filtered_total = int(paginated_data['@totalcount'])
