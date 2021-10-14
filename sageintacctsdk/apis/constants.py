@@ -512,5 +512,18 @@ dimensions_fields_mapping = {
         'MEGAENTITYID',
         'MEGAENTITYNAME',
         'RECORD_URL'
+    ],
+    'GLBATCH': [
+        'JOURNAL',
+        'BATCH_DATE',
+        'BATCH_TITLE',
+        'TAXIMPLICATIONS',
+        'VATVENDORID',
+        'VATCUSTOMERID',
+        'VATCONTACTID',
+        'REFERENCENO',
+        'BASELOCATION_NO',
+        'STATE',
+        'TAXSOLUTIONID'
     ]
 }
