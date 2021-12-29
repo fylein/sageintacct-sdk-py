@@ -262,7 +262,7 @@ class ApiBase:
         if self.__dimension in ('CCTRANSACTION', 'EPPAYMENT'):
             return self.__construct_update_payload(data)
 
-        return self.__construct_post_payload(data)
+        return self.__construct_update_payload(data)
 
     def __construct_post_payload(self, data: Dict):
         payload = {
