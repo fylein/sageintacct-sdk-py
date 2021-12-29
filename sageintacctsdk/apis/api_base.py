@@ -258,9 +258,24 @@ class ApiBase:
 
         return self.__construct_post_payload(data)
 
+    def update(self, data: Dict):
+        if self.__dimension in ('CCTRANSACTION', 'EPPAYMENT'):
+            return self.__construct_update_payload(data)
+
+        return self.__construct_post_payload(data)
+
     def __construct_post_payload(self, data: Dict):
         payload = {
             'create': {
+                self.__dimension: data
+            }
+        }
+
+        return self.format_and_send_request(payload)
+
+    def __construct_update_payload(self, data: Dict):
+        payload = {
+            'update': {
                 self.__dimension: data
             }
         }
