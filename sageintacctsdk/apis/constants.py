@@ -183,6 +183,26 @@ dimensions_fields_mapping = {
         'MEGAENTITYID',
         'MEGAENTITYNAME'
     ],
+    'CUSTOMER': [
+        'RECORDNO',
+        'CUSTOMERID',
+        'NAME',
+        'ENTITY',
+        'PARENTKEY',
+        'PARENTID',
+        'PARENTNAME',
+        'CUSTREPNAME',
+        'TOTALDUE',
+        'GLGRPKEY',
+        'GLGROUP',
+        'STATUS',
+        'ONETIME',
+        'ONHOLD',
+        'WHENCREATED',
+        'CREATEDBY',
+        'MODIFIEDBY',
+        'OBJECTRESTRICTION'
+    ],
     'TASK': [
         'RECORDNO',
         'TASKID',
