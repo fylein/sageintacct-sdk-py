@@ -1,8 +1,6 @@
 """
 Sage Intacct projects
 """
-from typing import Dict
-
 from .api_base import ApiBase
 
 
