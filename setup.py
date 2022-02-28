@@ -8,7 +8,7 @@ with open('README.md', 'r') as f:
 
 setuptools.setup(
     name='sageintacctsdk',
-    version='1.9.3',
+    version='1.9.4',
     author='Ashwin T',
     author_email='ashwin.t@fyle.in',
     description='Python SDK for accessing Sage Intacct APIs',
@@ -18,7 +18,7 @@ setuptools.setup(
     keywords=['sage-intacct', 'sage', 'fyle', 'api', 'python', 'sdk'],
     url='https://github.com/fylein/sageintacct-sdk-py',
     packages=setuptools.find_packages(),
-    install_requires=['requests==2.22.0', 'xmltodict==0.12.0'],
+    install_requires=['requests>=2.25.0', 'xmltodict==0.12.0'],
     classifiers=[
         'Topic :: Internet :: WWW/HTTP',
         'Intended Audience :: Developers',
