@@ -429,16 +429,17 @@ class ApiBase:
             if len(and_filter) > 1:
                 formatted_filter = {'and': {}}
                 for operator, field, value in and_filter:
-                    formatted_filter['and'].setdefault(operator, {}).update({'field': field, 'value': value})
+                    formatted_filter['and'].setdefault(operator, []).append({'field': field, 'value': value})
             else:
                 formatted_filter = {}
                 for operator, field, value in and_filter:
                     formatted_filter.setdefault(operator, {}).update({'field': field, 'value': value})
+
         elif or_filter:
             if len(or_filter) > 1:
                 formatted_filter = {'or': {}}
                 for operator, field, value in or_filter:
-                    formatted_filter['or'].setdefault(operator, {}).update({'field': field, 'value': value})
+                    formatted_filter['or'].setdefault(operator, []).append({'field': field, 'value': value})
             else:
                 formatted_filter = {}
                 for operator, field, value in or_filter:
