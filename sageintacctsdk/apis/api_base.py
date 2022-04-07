@@ -164,7 +164,7 @@ class ApiBase:
         }
         body = xmltodict.unparse(dict_body)
 
-        response = requests.post(api_url, headers=api_headers, data=body)
+        response = requests.post(api_url, headers=api_headers, data=body.encode('utf-8'))
 
         parsed_xml = xmltodict.parse(response.text, force_list={self.__dimension})
         parsed_response = json.loads(json.dumps(parsed_xml))
