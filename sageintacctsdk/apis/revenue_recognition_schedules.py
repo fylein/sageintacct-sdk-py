@@ -7,15 +7,15 @@ from .api_base import ApiBase
 
 
 class RevRecSchedules(ApiBase):
-    """Class for Revenue Recognition Schedule Entry APIs."""
+    """Class for Revenue Recognition Schedule APIs."""
     def __init__(self):
         ApiBase.__init__(self, dimension='REVRECSCHEDULE')
 
     def get_all(self):
-        """Get all Revenue Recognition Schedule Entries from Sage Intacct
+        """Get all Revenue Recognition Schedules from Sage Intacct
 
         Returns:
-            List of Dict in Revenue Recognition Schedule Entry schema.
+            List of Dict in Revenue Recognition Schedules schema.
         """
 
         complete_data = []
