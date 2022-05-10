@@ -31,6 +31,8 @@ from .tax_details import TaxDetails
 from .gl_detail import GLDetail
 from .classes import Classes
 from .journal_entries import JournalEntries
+from .revenue_recognition_schedules import RevRecSchedules
+from .revenue_recognition_schedule_entries import RevRecScheduleEntries
 
 __all__ = [
     'ApiBase',
@@ -62,5 +64,7 @@ __all__ = [
     'TaxDetails',
     'GLDetail',
     'Classes',
-    'JournalEntries'
+    'JournalEntries',
+    'RevRecSchedules',
+    'RevRecScheduleEntries'
 ]

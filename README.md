@@ -7,7 +7,7 @@ This project requires [Python 3+](https://www.python.org/downloads/) and [Reques
 
 1. Download this project and use it (copy it in your project, etc).
 2. Install it from [pip](https://pypi.org).
-        
+
         $ pip install sageintacctsdk
 
 ## Usage
@@ -27,7 +27,7 @@ connection = SageIntacctSDK(
     user_password='<YOUR USER PASSWORD>'
 )
 ```
-2. After that you'll be able to access any of the 24 API classes: accounts, ap_payments, ar_invoices, attachments, bills, charge_card_accounts, charge_card_transactions, checking_accounts, classes, contacts, customers, departments, employees, expense_payment_types, expense_reports, expense_types, gl_detail, items, locations, projects, reimbursements, savings_accounts, tasks and vendors.
+2. After that you'll be able to access any of the 26 API classes: accounts, ap_payments, ar_invoices, attachments, bills, charge_card_accounts, charge_card_transactions, checking_accounts, classes, contacts, customers, departments, employees, expense_payment_types, expense_reports, expense_types, gl_detail, items, locations, projects, reimbursements, revenue_recognition_schedules, revenue_recognition_schedule_entries, savings_accounts, tasks and vendors.
 ```python
 """
 USAGE: <SageIntacctSDK INSTANCE>.<API_NAME>.<API_METHOD>(<PARAMETERS>)
@@ -67,9 +67,9 @@ response = connection.employees.get(field='EMPLOYEEID', value='E101')
 ```
 
 ## Advanced Queries
-Several methods of querying the Sage Inacct API exists within the SDK.  <get_by_query> allows you to specify multiple 
-critera using textual mathematical operators and logical filters.  
-   
+Several methods of querying the Sage Inacct API exists within the SDK.  <get_by_query> allows you to specify multiple
+critera using textual mathematical operators and logical filters.
+
 Arguments are passed to and_filter, or_filter, or both.  The and_filter is the default operator to pass filters to.
 For example if you want to pass a single operator without a logical context you would pass it to and_filter.
 

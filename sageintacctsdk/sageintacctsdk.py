@@ -4,7 +4,8 @@ Sage Intacct Python SDK
 from .apis import ApiBase, Contacts, Locations, Employees, Accounts, ExpenseTypes, Attachments, ExpenseReports,\
     Vendors, Bills, Projects, Departments, ChargeCardAccounts, ChargeCardTransactions, Customers, Items,\
     APPayments, Reimbursements, CheckingAccounts, SavingsAccounts, Tasks, ExpensePaymentTypes, Dimensions,\
-    DimensionValues, LocationEntities, ARInvoices, TaxDetails, GLDetail, Classes, JournalEntries
+    DimensionValues, LocationEntities, ARInvoices, TaxDetails, GLDetail, Classes, JournalEntries,\
+    RevRecSchedules, RevRecScheduleEntries
 
 
 class SageIntacctSDK:
@@ -61,6 +62,8 @@ class SageIntacctSDK:
         self.gl_detail = GLDetail()
         self.classes = Classes()
         self.journal_entries = JournalEntries()
+        self.rev_rec_schedules = RevRecSchedules()
+        self.rev_rec_schedule_entries = RevRecScheduleEntries()
         self.update_sender_id()
         self.update_sender_password()
         self.update_session_id()
@@ -99,6 +102,8 @@ class SageIntacctSDK:
         self.gl_detail.set_sender_id(self.__sender_id)
         self.classes.set_sender_id(self.__sender_id)
         self.journal_entries.set_sender_id(self.__sender_id)
+        self.rev_rec_schedules.set_sender_id(self.__sender_id)
+        self.rev_rec_schedule_entries.set_sender_id(self.__sender_id)
 
     def update_sender_password(self):
         """
@@ -134,6 +139,8 @@ class SageIntacctSDK:
         self.gl_detail.set_sender_password(self.__sender_password)
         self.classes.set_sender_password(self.__sender_password)
         self.journal_entries.set_sender_password(self.__sender_password)
+        self.rev_rec_schedules.set_sender_password(self.__sender_password)
+        self.rev_rec_schedule_entries(self.__sender_password)
 
     def update_session_id(self):
         """
@@ -171,3 +178,5 @@ class SageIntacctSDK:
         self.gl_detail.set_session_id(self.__session_id)
         self.classes.set_session_id(self.__session_id)
         self.journal_entries.set_session_id(self.__session_id)
+        self.rev_rec_schedules.set_session_id(self.__session_id)
+        self.rev_rec_schedule_entries.set_session_id(self.__session_id)
