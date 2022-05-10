@@ -581,8 +581,7 @@ dimensions_fields_mapping = {
         'MODIFIEDBY',
         'MEGAENTITYKEY',
         'MEGAENTITYID',
-        'MEGAENTITYNAME',
-        'RECORD_URL'
+        'MEGAENTITYNAME'
     ],
     'REVRECSCHEDULEENTRY': [
         'RECORDNO',
@@ -644,8 +643,7 @@ dimensions_fields_mapping = {
         'PROJECTNAME',
         'TASKDIMKEY',
         'TASKID',
-        'TASKNAME',
-        'RECORD_URL'
+        'TASKNAME'
     ]
 
 }

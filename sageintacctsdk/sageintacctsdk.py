@@ -140,7 +140,7 @@ class SageIntacctSDK:
         self.classes.set_sender_password(self.__sender_password)
         self.journal_entries.set_sender_password(self.__sender_password)
         self.rev_rec_schedules.set_sender_password(self.__sender_password)
-        self.rev_rec_schedule_entries(self.__sender_password)
+        self.rev_rec_schedule_entries.set_sender_password(self.__sender_password)
 
     def update_session_id(self):
         """
