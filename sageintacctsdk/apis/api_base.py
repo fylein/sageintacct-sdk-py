@@ -148,8 +148,27 @@ class ApiBase:
 
         return errormessages
 
+    def __post_request_for_raw_response(self, dict_body: dict, api_url: str):
+        """Create an HTTP post request to get a raw response.
+
+        Parameters:
+            data (dict): HTTP POST body data for the wanted API.
+            api_url (str): Url for the wanted API endpoint.
+
+        Returns:
+            A requests.Response object.
+        """
+
+        api_headers = {
+            'content-type': 'application/xml'
+        }
+        body = xmltodict.unparse(dict_body)
+
+        return requests.post(api_url, headers=api_headers, data=body.encode('utf-8'))
+
+
     def __post_request(self, dict_body: dict, api_url: str):
-        """Create a HTTP post request.
+        """Create an HTTP post request and handle HTTP errors.
 
         Parameters:
             data (dict): HTTP POST body data for the wanted API.
@@ -159,17 +178,12 @@ class ApiBase:
             A response from the request (dict).
         """
 
-        api_headers = {
-            'content-type': 'application/xml'
-        }
-        body = xmltodict.unparse(dict_body)
+        raw_response = self.__post_request_for_raw_response(dict_body, api_url)
 
-        response = requests.post(api_url, headers=api_headers, data=body.encode('utf-8'))
-
-        parsed_xml = xmltodict.parse(response.text, force_list={self.__dimension})
+        parsed_xml = xmltodict.parse(raw_response.text, force_list={self.__dimension})
         parsed_response = json.loads(json.dumps(parsed_xml))
 
-        if response.status_code == 200:
+        if raw_response.status_code == 200:
             if parsed_response['response']['control']['status'] == 'success':
                 api_response = parsed_response['response']['operation']
 
@@ -192,22 +206,22 @@ class ApiBase:
 
                 raise WrongParamsError('Error during {0}'.format(api_response['result']['function']), exception_msg)
 
-        if response.status_code == 400:
+        if raw_response.status_code == 400:
             raise WrongParamsError('Some of the parameters are wrong', parsed_response)
 
-        if response.status_code == 401:
+        if raw_response.status_code == 401:
             raise InvalidTokenError('Invalid token / Incorrect credentials', parsed_response)
 
-        if response.status_code == 403:
+        if raw_response.status_code == 403:
             raise NoPrivilegeError('Forbidden, the user has insufficient privilege', parsed_response)
 
-        if response.status_code == 404:
+        if raw_response.status_code == 404:
             raise NotFoundItemError('Not found item with ID', parsed_response)
 
-        if response.status_code == 498:
+        if raw_response.status_code == 498:
             raise ExpiredTokenError('Expired token, try to refresh it', parsed_response)
 
-        if response.status_code == 500:
+        if raw_response.status_code == 500:
             raise InternalServerError('Internal server error', parsed_response)
 
         raise SageIntacctSDKError('Error: {0}'.format(parsed_response))
