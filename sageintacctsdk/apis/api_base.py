@@ -198,7 +198,6 @@ class ApiBase:
                 return api_response
 
             if api_response['result']['status'] == 'failure':
-                print('api_response',api_response)
                 if 'errormessage' in api_response['result']:
                     exception_msg = self.__decode_support_id(api_response['result']['errormessage'])
 
