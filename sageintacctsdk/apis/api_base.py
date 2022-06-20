@@ -136,7 +136,7 @@ class ApiBase:
         if (error and error['description2']):
             message = error['description2']
             support_id = re.search('Support ID: (.*)]', message)
-            if support_id.group(1):
+            if support_id and support_id.group(1):
                 decoded_support_id = unquote(support_id.group(1))
                 message = message.replace(support_id.group(1), decoded_support_id)
 
@@ -198,13 +198,29 @@ class ApiBase:
                 return api_response
 
             if api_response['result']['status'] == 'failure':
-                exception_msg = self.__decode_support_id(api_response['result']['errormessage'])
+                if 'errormessage' in api_response['result']:
+                    exception_msg = self.__decode_support_id(api_response['result']['errormessage'])
 
-                for error in exception_msg['error']:
-                    if error['description2'] and 'You do not have permission for API' in error['description2']:
-                        raise InvalidTokenError('The user has insufficient privilege', exception_msg)
+                    for error in exception_msg['error']:
+                        if error['description2'] and 'You do not have permission for API' in error['description2']:
+                            raise InvalidTokenError('The user has insufficient privilege', exception_msg)
 
-                raise WrongParamsError('Error during {0}'.format(api_response['result']['function']), exception_msg)
+                    raise WrongParamsError('Error during {0}'.format(api_response['result']['function']), exception_msg)
+                else:
+                    custom_response = {
+                        'message': 'Error during {}'.format(api_response['result']['function']),
+                        'response': {
+                            'error': [
+                                {
+                                    'errorno': '-',
+                                    'description': None,
+                                    'description2': 'Something went wrong',
+                                    'correction': '-'
+                                }
+                            ]
+                        }
+                    }
+                    raise WrongParamsError('Something went wrong', custom_response)
 
         if raw_response.status_code == 400:
             raise WrongParamsError('Some of the parameters are wrong', parsed_response)
