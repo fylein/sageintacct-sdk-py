@@ -1,4 +1,21 @@
 dimensions_fields_mapping = {
+    'COSTTYPE': [
+        'RECORDNO',
+        "PROJECTKEY",
+        "PROJECTID",
+        "PROJECTNAME",
+        "TASKKEY",
+        "TASKID",
+        "TASKNAME",
+        "COSTTYPEID",
+        "NAME",
+        "STATUS",
+        "ACCOUNTKEY",
+        "ACCOUNTNO",
+        "ITEMKEY",
+        "ITEMID",
+        "ITEMNAME",
+    ],
     'GLACCOUNT': [
         'RECORDNO',
         'ACCOUNTNO',
@@ -644,6 +661,7 @@ dimensions_fields_mapping = {
         'TASKDIMKEY',
         'TASKID',
         'TASKNAME'
-    ]
+    ],
+    
 
 }
