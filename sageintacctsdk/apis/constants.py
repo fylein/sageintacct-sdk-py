@@ -661,7 +661,5 @@ dimensions_fields_mapping = {
         'TASKDIMKEY',
         'TASKID',
         'TASKNAME'
-    ],
-    
-
+    ]
 }
