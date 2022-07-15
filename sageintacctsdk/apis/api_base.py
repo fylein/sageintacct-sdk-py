@@ -289,8 +289,11 @@ class ApiBase:
         return self.__construct_post_payload(data)
 
     def update(self, data: Dict):
-        if self.__dimension in ('CCTRANSACTION', 'EPPAYMENT'):
-            return self.__construct_update_payload(data)
+        '''
+
+        :param data: A dictionary for the object (e.g., Vendor object) with information to update (dict).
+        :return: A response from the __post_request (dict).
+        '''
 
         return self.__construct_update_payload(data)
 
