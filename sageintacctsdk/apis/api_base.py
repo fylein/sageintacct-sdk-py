@@ -222,6 +222,9 @@ class ApiBase:
                     }
                     raise WrongParamsError('Something went wrong', custom_response)
 
+        if 'errormessage' in parsed_response:
+            parsed_response = parsed_response['errormessage']
+
         if raw_response.status_code == 400:
             raise WrongParamsError('Some of the parameters are wrong', parsed_response)
 
