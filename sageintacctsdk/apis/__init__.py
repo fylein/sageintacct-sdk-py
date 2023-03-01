@@ -34,6 +34,7 @@ from .journal_entries import JournalEntries
 from .revenue_recognition_schedules import RevRecSchedules
 from .revenue_recognition_schedule_entries import RevRecScheduleEntries
 from .cost_types import CostTypes
+from .order_entry_transactions import OrderEntryTransactions
 
 __all__ = [
     'ApiBase',
@@ -68,5 +69,6 @@ __all__ = [
     'JournalEntries',
     'RevRecSchedules',
     'RevRecScheduleEntries',
-    'CostTypes'
+    'CostTypes',
+    'OrderEntryTransactions',
 ]
