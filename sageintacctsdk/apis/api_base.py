@@ -8,6 +8,7 @@ from warnings import warn
 from typing import Dict, List, Tuple
 from urllib.parse import unquote
 import re
+import json
 
 import xmltodict
 import requests
@@ -231,7 +232,10 @@ class ApiBase:
                 parsed_response = parsed_response['response']['errormessage']
 
         if raw_response.status_code == 400:
-            raise WrongParamsError('Some of the parameters are wrong', parsed_response)
+            if 'invalidRequest' == parsed_response['error']['errorno']:
+                raise InvalidTokenError('Invalid token / Incorrect credentials', parsed_response)
+            else:
+                raise WrongParamsError('Some of the parameters are wrong', parsed_response)
 
         if raw_response.status_code == 401:
             raise InvalidTokenError('Invalid token / Incorrect credentials', parsed_response)
