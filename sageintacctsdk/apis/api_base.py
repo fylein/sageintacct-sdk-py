@@ -294,10 +294,10 @@ class ApiBase:
         return response['result']
 
     def post(self, data: Dict):
-        if self.__dimension in ('CCTRANSACTION', 'EPPAYMENT'):
+        if self.__post_legacy_method is not None:
             return self.__construct_post_legacy_payload(data)
-
-        return self.__construct_post_payload(data)
+        else:
+            return self.__construct_post_payload(data)
 
     def update(self, data: Dict):
         '''
