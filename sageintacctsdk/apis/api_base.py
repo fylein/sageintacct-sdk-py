@@ -8,7 +8,6 @@ from warnings import warn
 from typing import Dict, List, Tuple
 from urllib.parse import unquote
 import re
-import json
 
 import xmltodict
 import requests
