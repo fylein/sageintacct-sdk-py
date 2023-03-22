@@ -231,7 +231,10 @@ class ApiBase:
                 parsed_response = parsed_response['response']['errormessage']
 
         if raw_response.status_code == 400:
-            raise WrongParamsError('Some of the parameters are wrong', parsed_response)
+            if 'error' in parsed_response and isinstance(parsed_response['error'], dict) and 'errorno' in parsed_response['error'] and parsed_response['error']['errorno'] == 'invalidRequest':
+                raise InvalidTokenError('Invalid token / Incorrect credentials', parsed_response)
+            else:
+                raise WrongParamsError('Some of the parameters are wrong', parsed_response)
 
         if raw_response.status_code == 401:
             raise InvalidTokenError('Invalid token / Incorrect credentials', parsed_response)
