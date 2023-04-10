@@ -203,7 +203,7 @@ class ApiBase:
 
                     for error in exception_msg['error']:
                         if error['description2'] and 'You do not have permission for API' in error['description2']:
-                            raise InvalidTokenError('The user has insufficient privilege', exception_msg)
+                            raise NoPrivilegeError('The user has insufficient privilege', exception_msg)
 
                     raise WrongParamsError('Error during {0}'.format(api_response['result']['function']), exception_msg)
                 else:
