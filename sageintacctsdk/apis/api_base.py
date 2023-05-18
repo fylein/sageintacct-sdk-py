@@ -179,8 +179,12 @@ class ApiBase:
         """
 
         raw_response = self.__post_request_for_raw_response(dict_body, api_url)
-
-        parsed_xml = xmltodict.parse(raw_response.text, force_list={self.__dimension})
+        try:
+            parsed_xml = xmltodict.parse(raw_response.text, force_list={self.__dimension})
+        except:
+            #bad xml format from Sage Intacct fix
+            raw_response = '<root>' + raw_response.text + '</root>'
+            parsed_xml = xmltodict.parse(raw_response.text, force_list={self.__dimension})['root']
         parsed_response = json.loads(json.dumps(parsed_xml))
 
         if raw_response.status_code == 200:
