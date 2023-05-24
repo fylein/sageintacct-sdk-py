@@ -426,6 +426,35 @@ class ApiBase:
 
         return complete_data
 
+    def get_all_generator(self, field: str = None, value: str = None, fields: list = None):
+        """
+        Get all data from Sage Intacct
+        """
+        count = self.count()
+        pagesize = self.__pagesize
+        for offset in range(0, count, pagesize):
+            data = {
+                'query': {
+                    'object': self.__dimension,
+                    'select': {
+                        'field': fields if fields else dimensions_fields_mapping[self.__dimension]
+                    },
+                    'pagesize': pagesize,
+                    'offset': offset
+                }
+            }
+
+            if field and value:
+                data['query']['filter'] = {
+                    'equalto': {
+                        'field': field,
+                        'value': value
+                    }
+                }
+
+            yield self.format_and_send_request(data)['data'][self.__dimension]
+            
+
     __query_filter = List[Tuple[str, str, str]]
 
     def get_by_query(self, fields: List[str] = None,
