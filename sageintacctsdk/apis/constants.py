@@ -10,11 +10,8 @@ dimensions_fields_mapping = {
         'COSTTYPEID',
         'NAME',
         'STATUS',
-        'ACCOUNTKEY',
-        'ACCOUNTNO',
-        'ITEMKEY',
-        'ITEMID',
-        'ITEMNAME',
+        'WHENCREATED',
+        'WHENMODIFIED'
     ],
     'GLACCOUNT': [
         'RECORDNO',
