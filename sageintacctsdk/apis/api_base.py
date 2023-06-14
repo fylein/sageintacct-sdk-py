@@ -426,7 +426,7 @@ class ApiBase:
 
         return complete_data
 
-    def get_all_generator(self, field: str = None, value: str = None, fields: list = None):
+    def get_all_generator(self, field: str = None, value: str = None, fields: list = None, updated_at: str = None):
         """
         Get all data from Sage Intacct
         """
@@ -440,7 +440,8 @@ class ApiBase:
                         'field': fields if fields else dimensions_fields_mapping[self.__dimension]
                     },
                     'pagesize': pagesize,
-                    'offset': offset
+                    'offset': offset,
+                    'filter': None
                 }
             }
 
@@ -452,8 +453,31 @@ class ApiBase:
                     }
                 }
 
-            yield self.format_and_send_request(data)['data'][self.__dimension]
-            
+            field_filter = {}
+            if updated_at and data['query']['filter']:
+                field_filter = data['query']['filter']
+                updated_at_filter = {
+                    'greaterthanorequalto': {
+                        'field': 'WHENMODIFIED',
+                        'value': updated_at
+                    }
+                }
+
+                data['query']['filter'] = {
+                    'and': {}
+                }
+                data['query']['filter']['and'].update(field_filter)
+                data['query']['filter']['and'].update(updated_at_filter)
+
+            if not data['query']['filter']:
+                del data['query']['filter']
+
+            response = self.format_and_send_request(data)['data']
+            if self.__dimension in response:
+                yield self.format_and_send_request(data)['data'][self.__dimension]
+            else:
+                yield []
+
 
     __query_filter = List[Tuple[str, str, str]]
 
