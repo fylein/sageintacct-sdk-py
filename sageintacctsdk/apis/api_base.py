@@ -179,8 +179,12 @@ class ApiBase:
         """
 
         raw_response = self.__post_request_for_raw_response(dict_body, api_url)
-
-        parsed_xml = xmltodict.parse(raw_response.text, force_list={self.__dimension})
+        try:
+            parsed_xml = xmltodict.parse(raw_response.text, force_list={self.__dimension})
+        except:
+            #bad xml format from Sage Intacct fix
+            raw_response = '<root>' + raw_response.text + '</root>'
+            parsed_xml = xmltodict.parse(raw_response, force_list={self.__dimension})['root']
         parsed_response = json.loads(json.dumps(parsed_xml))
 
         if raw_response.status_code == 200:
@@ -203,7 +207,7 @@ class ApiBase:
 
                     for error in exception_msg['error']:
                         if error['description2'] and 'You do not have permission for API' in error['description2']:
-                            raise InvalidTokenError('The user has insufficient privilege', exception_msg)
+                            raise NoPrivilegeError('The user has insufficient privilege', exception_msg)
 
                     raise WrongParamsError('Error during {0}'.format(api_response['result']['function']), exception_msg)
                 else:
@@ -231,7 +235,10 @@ class ApiBase:
                 parsed_response = parsed_response['response']['errormessage']
 
         if raw_response.status_code == 400:
-            raise WrongParamsError('Some of the parameters are wrong', parsed_response)
+            if 'error' in parsed_response and isinstance(parsed_response['error'], dict) and 'errorno' in parsed_response['error'] and parsed_response['error']['errorno'] == 'invalidRequest':
+                raise InvalidTokenError('Invalid token / Incorrect credentials', parsed_response)
+            else:
+                raise WrongParamsError('Some of the parameters are wrong', parsed_response)
 
         if raw_response.status_code == 401:
             raise InvalidTokenError('Invalid token / Incorrect credentials', parsed_response)
@@ -418,6 +425,59 @@ class ApiBase:
             complete_data.extend(paginated_data)
 
         return complete_data
+
+    def get_all_generator(self, field: str = None, value: str = None, fields: list = None, updated_at: str = None):
+        """
+        Get all data from Sage Intacct
+        """
+        count = self.count()
+        pagesize = self.__pagesize
+        for offset in range(0, count, pagesize):
+            data = {
+                'query': {
+                    'object': self.__dimension,
+                    'select': {
+                        'field': fields if fields else dimensions_fields_mapping[self.__dimension]
+                    },
+                    'pagesize': pagesize,
+                    'offset': offset,
+                    'filter': None
+                }
+            }
+
+            if field and value:
+                data['query']['filter'] = {
+                    'equalto': {
+                        'field': field,
+                        'value': value
+                    }
+                }
+
+            field_filter = {}
+            if updated_at and data['query']['filter']:
+                field_filter = data['query']['filter']
+                updated_at_filter = {
+                    'greaterthanorequalto': {
+                        'field': 'WHENMODIFIED',
+                        'value': updated_at
+                    }
+                }
+
+                data['query']['filter'] = {
+                    'and': {}
+                }
+                data['query']['filter']['and'].update(field_filter)
+                data['query']['filter']['and'].update(updated_at_filter)
+
+            if not data['query']['filter']:
+                del data['query']['filter']
+
+            response = self.format_and_send_request(data)['data']
+            if self.__dimension in response:
+                yield self.format_and_send_request(data)['data'][self.__dimension]
+            else:
+                yield []
+
 
     __query_filter = List[Tuple[str, str, str]]
 
