@@ -14,7 +14,7 @@ class SageIntacctSDK:
     """
 
     def __init__(self, sender_id: str, sender_password: str, user_id: str,
-        company_id: str, user_password: str, entity_id: str=None):
+        company_id: str, user_password: str, entity_id: str=None, show_private: bool=False):
         """
         Initialize connection to Sage Intacct
         :param sender_id: Sage Intacct sender id
@@ -23,6 +23,7 @@ class SageIntacctSDK:
         :param company_id: Sage Intacct company id
         :param user_password: Sage Intacct user password
         :param (optional) entity_id: Sage Intacct entity ID
+        :param (optional) show_private: Show Private on API Calls
         """
         # Initializing variables
         self.__sender_id = sender_id
@@ -31,6 +32,7 @@ class SageIntacctSDK:
         self.__company_id = company_id
         self.__user_password = user_password
         self.__entity_id = entity_id
+        self.__show_private = show_private
 
         self.api_base = ApiBase()
         self.contacts = Contacts()
@@ -192,3 +194,43 @@ class SageIntacctSDK:
         self.rev_rec_schedule_entries.set_session_id(self.__session_id)
         self.cost_types.set_session_id(self.__session_id)
         self.order_entry_transactions.set_session_id(self.__session_id)
+
+    def update_show_private(self):
+        """
+        Update the show private in all API objects.
+        """
+        self.api_base.set_show_private(self.__show_private)
+        self.contacts.set_show_private(self.__show_private)
+        self.locations.set_show_private(self.__show_private)
+        self.employees.set_show_private(self.__show_private)
+        self.accounts.set_show_private(self.__show_private)
+        self.expense_types.set_show_private(self.__show_private)
+        self.attachments.set_show_private(self.__show_private)
+        self.expense_reports.set_show_private(self.__show_private)
+        self.vendors.set_show_private(self.__show_private)
+        self.bills.set_show_private(self.__show_private)
+        self.projects.set_show_private(self.__show_private)
+        self.departments.set_show_private(self.__show_private)
+        self.charge_card_accounts.set_show_private(self.__show_private)
+        self.charge_card_transactions.set_show_private(self.__show_private)
+        self.customers.set_show_private(self.__show_private)
+        self.items.set_show_private(self.__show_private)
+        self.ap_payments.set_show_private(self.__show_private)
+        self.ar_invoices.set_show_private(self.__show_private)
+        self.ar_payments.set_show_private(self.__show_private)
+        self.reimbursements.set_show_private(self.__show_private)
+        self.checking_accounts.set_show_private(self.__show_private)
+        self.savings_accounts.set_show_private(self.__show_private)
+        self.dimensions.set_show_private(self.__show_private)
+        self.dimension_values.set_show_private(self.__show_private)
+        self.tasks.set_show_private(self.__show_private)
+        self.expense_payment_types.set_show_private(self.__show_private)
+        self.location_entities.set_show_private(self.__show_private)
+        self.tax_details.set_show_private(self.__show_private)
+        self.gl_detail.set_show_private(self.__show_private)
+        self.classes.set_show_private(self.__show_private)
+        self.journal_entries.set_show_private(self.__show_private)
+        self.rev_rec_schedules.set_show_private(self.__show_private)
+        self.rev_rec_schedule_entries.set_show_private(self.__show_private)
+        self.cost_types.set_show_private(self.__show_private)
+        self.order_entry_transactions.set_show_private(self.__show_private)

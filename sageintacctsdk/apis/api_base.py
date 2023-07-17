@@ -45,6 +45,14 @@ class ApiBase:
         """
         self.__sender_password = sender_password
 
+    def set_show_private(self, show_private: bool):
+        """
+        Set the show private for APIs
+        :param show_private: boolean
+        :return: None
+        """
+        self.__show_private = show_private
+
     def get_session_id(self, user_id: str, company_id: str, user_password: str, entity_id: str = None):
         """
         Sets the session id for APIs
@@ -293,6 +301,12 @@ class ApiBase:
                 }
             }
         }
+        if self.__show_private:
+            try:
+                options = {'showprivate': True}
+                dict_body['request']['operation']['content']['function']['query']['options'] = options
+            except KeyError:
+                pass
 
         response = self.__post_request(dict_body, self.__api_url)
         return response['result']
