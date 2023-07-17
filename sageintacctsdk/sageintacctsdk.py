@@ -72,6 +72,7 @@ class SageIntacctSDK:
         self.update_sender_id()
         self.update_sender_password()
         self.update_session_id()
+        self.update_show_private()
 
     def update_sender_id(self):
         """
