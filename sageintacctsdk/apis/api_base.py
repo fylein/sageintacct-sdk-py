@@ -504,6 +504,7 @@ class ApiBase:
                 """
 
         complete_data = []
+        filtered_total = None
         count = self.count()
         pagesize = self.__pagesize
         offset = 0
