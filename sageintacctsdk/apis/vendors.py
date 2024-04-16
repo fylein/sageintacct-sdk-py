@@ -29,7 +29,7 @@ class Vendors(ApiBase):
                     {
                         'field': fields if fields else dimensions_fields_mapping['VENDOR'],
                     },
-                'pagesize': '1',
+                'pagesize': '1000',
                 'filter': {
                     'equalto': [
                     {
