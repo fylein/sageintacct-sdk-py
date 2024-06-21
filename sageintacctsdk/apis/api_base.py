@@ -440,7 +440,7 @@ class ApiBase:
 
         return complete_data
 
-    def get_all_generator(self, field: str = None, value: str = None, fields: list = None, updated_at: str = None):
+    def get_all_generator(self, field: str = None, value: str = None, fields: list = None, updated_at: str = None, order_by_field: str = None, order: str = None):
         """
         Get all data from Sage Intacct
         """
@@ -453,11 +453,20 @@ class ApiBase:
                     'select': {
                         'field': fields if fields else dimensions_fields_mapping[self.__dimension]
                     },
+                    'orderby': None,
                     'pagesize': pagesize,
                     'offset': offset,
                     'filter': None
                 }
             }
+
+            if order_by_field and order:
+                data['query']['orderby'] = {
+                    'order': {
+                        'field': order_by_field,
+                        order: None
+                    }
+                }
 
             if field and value:
                 data['query']['filter'] = {
@@ -485,6 +494,9 @@ class ApiBase:
 
             if not data['query']['filter']:
                 del data['query']['filter']
+
+            if not data['query']['orderby']:
+                del data['query']['orderby']
 
             response = self.format_and_send_request(data)['data']
             if self.__dimension in response:
