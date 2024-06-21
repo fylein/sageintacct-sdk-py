@@ -263,7 +263,8 @@ dimensions_fields_mapping = {
         'ACCOUNTLABEL',
         'APACCOUNT',
         'APACCOUNTTITLE',
-        'STATUS'
+        'STATUS',
+        'WHENMODIFIED'
     ],
     'CREDITCARD': [
         'RECORDNO',
