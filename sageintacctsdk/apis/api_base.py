@@ -453,8 +453,10 @@ class ApiBase:
                     'select': {
                         'field': fields if fields else dimensions_fields_mapping[self.__dimension]
                     },
+                    'orderby': None,
                     'pagesize': pagesize,
                     'offset': offset,
+                    'filter': None,
                 }
             }
 
@@ -489,6 +491,11 @@ class ApiBase:
             # if we only have updated_at filter, just use it
             elif updated_at_filter:
                 data["query"]["filter"] = updated_at_filter
+
+            if not data['query']['filter']:
+                del data['query']['filter']
+            if not data['query']['orderby']:
+                del data['query']['orderby']
 
             response = self.format_and_send_request(data)['data']
             if self.__dimension in response:
