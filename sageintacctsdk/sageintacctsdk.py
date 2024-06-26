@@ -1,7 +1,7 @@
 """
 Sage Intacct Python SDK
 """
-from .apis import ApiBase, Contacts, Locations, Employees, Accounts, ExpenseTypes, Attachments, ExpenseReports,\
+from .apis import ApiBase, Contacts, Contracts, Locations, Employees, Accounts, ExpenseTypes, Attachments, ExpenseReports,\
     Vendors, Bills, Projects, Departments, ChargeCardAccounts, ChargeCardTransactions, Customers, Items,\
     APPayments, Reimbursements, CheckingAccounts, SavingsAccounts, Tasks, ExpensePaymentTypes, Dimensions,\
     DimensionValues, LocationEntities, ARInvoices, ARPayments, TaxDetails, GLDetail, Classes, JournalEntries,\
@@ -36,6 +36,7 @@ class SageIntacctSDK:
 
         self.api_base = ApiBase()
         self.contacts = Contacts()
+        self.contracts = Contracts()
         self.locations = Locations()
         self.employees = Employees()
         self.accounts = Accounts()
@@ -80,6 +81,7 @@ class SageIntacctSDK:
         """
         self.api_base.set_sender_id(self.__sender_id)
         self.contacts.set_sender_id(self.__sender_id)
+        self.contracts.set_sender_id(self.__sender_id)
         self.locations.set_sender_id(self.__sender_id)
         self.employees.set_sender_id(self.__sender_id)
         self.accounts.set_sender_id(self.__sender_id)
@@ -120,6 +122,7 @@ class SageIntacctSDK:
         """
         self.api_base.set_sender_password(self.__sender_password)
         self.contacts.set_sender_password(self.__sender_password)
+        self.contracts.set_sender_password(self.__sender_password)
         self.locations.set_sender_password(self.__sender_password)
         self.employees.set_sender_password(self.__sender_password)
         self.accounts.set_sender_password(self.__sender_password)
@@ -162,6 +165,7 @@ class SageIntacctSDK:
         self.__user_id, self.__company_id, self.__user_password, self.__entity_id)
         self.api_base.set_session_id(self.__session_id)
         self.contacts.set_session_id(self.__session_id)
+        self.contracts.set_session_id(self.__session_id)
         self.locations.set_session_id(self.__session_id)
         self.employees.set_session_id(self.__session_id)
         self.accounts.set_session_id(self.__session_id)
@@ -202,6 +206,7 @@ class SageIntacctSDK:
         """
         self.api_base.set_show_private(self.__show_private)
         self.contacts.set_show_private(self.__show_private)
+        self.contracts.set_show_private(self.__show_private)
         self.locations.set_show_private(self.__show_private)
         self.employees.set_show_private(self.__show_private)
         self.accounts.set_show_private(self.__show_private)
