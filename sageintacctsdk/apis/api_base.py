@@ -456,7 +456,7 @@ class ApiBase:
                     'orderby': None,
                     'pagesize': pagesize,
                     'offset': offset,
-                    'filter': None
+                    'filter': None,
                 }
             }
 
@@ -468,33 +468,32 @@ class ApiBase:
                     }
                 }
 
-            if field and value:
-                data['query']['filter'] = {
-                    'equalto': {
-                        'field': field,
-                        'value': value
-                    }
+            field_value_filter = (
+                {"equalto": {"field": field, "value": value}} if field and value else {}
+            )
+            updated_at_filter = (
+                {
+                    "greaterthanorequalto": (
+                        {"field": "WHENMODIFIED", "value": updated_at}
+                    )
                 }
-
-            field_filter = {}
-            if updated_at and data['query']['filter']:
-                field_filter = data['query']['filter']
-                updated_at_filter = {
-                    'greaterthanorequalto': {
-                        'field': 'WHENMODIFIED',
-                        'value': updated_at
-                    }
+                if updated_at
+                else {}
+            )
+            # if we have updated_at_filter and field_value_filter we need to 'and' them
+            if updated_at_filter and field_value_filter:
+                data["query"]["filter"] = {
+                    "and": {**field_value_filter, **updated_at_filter}
                 }
-
-                data['query']['filter'] = {
-                    'and': {}
-                }
-                data['query']['filter']['and'].update(field_filter)
-                data['query']['filter']['and'].update(updated_at_filter)
+            # if we only have field_value filter, just use it
+            elif field_value_filter:
+                data["query"]["filter"] = field_value_filter
+            # if we only have updated_at filter, just use it
+            elif updated_at_filter:
+                data["query"]["filter"] = updated_at_filter
 
             if not data['query']['filter']:
                 del data['query']['filter']
-
             if not data['query']['orderby']:
                 del data['query']['orderby']
 
