@@ -37,6 +37,7 @@ from .revenue_recognition_schedules import RevRecSchedules
 from .revenue_recognition_schedule_entries import RevRecScheduleEntries
 from .cost_types import CostTypes
 from .order_entry_transactions import OrderEntryTransactions
+from .allocation_entry import AllocationEntry
 
 __all__ = [
     'ApiBase',
@@ -57,8 +58,9 @@ __all__ = [
     'Customers',
     'Items',
     'APPayments',
+    'AllocationEntry',
     'ARInvoices',
-    'ARPayments'
+    'ARPayments',
     'Reimbursements',
     'CheckingAccounts',
     'SavingsAccounts',
