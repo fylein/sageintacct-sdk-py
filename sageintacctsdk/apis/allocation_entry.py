@@ -12,7 +12,8 @@ class AllocationEntry(ApiBase):
         Get all the allocation entries.
         """
 
-        allocation_entries_fields = ['ALLOCATIONID', 'ALLOCATIONKEY']
+        allocation_entries_fields = ['ALLOCATIONID', 'ALLOCATIONKEY', 'LOCATIONID', 'DEPARTMENTID', 'PROJECTID',
+                                    'CUSTOMERID', 'ITEMID', 'TASKID', 'COSTTYPEID', 'CLASSID']
 
         fields = self.get_lookup()
         if fields:
