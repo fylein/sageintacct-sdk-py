@@ -22,4 +22,3 @@ class AllocationEntry(ApiBase):
             allocation_entries_fields.append(field['RELATEDBY'])
 
         yield from super().get_all_generator(fields=allocation_entries_fields)
-        
