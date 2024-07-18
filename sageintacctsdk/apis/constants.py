@@ -700,6 +700,12 @@ dimensions_fields_mapping = {
     'ALLOCATION': [
         'RECORDNO',
         'ALLOCATIONID',
-        'STATUS'
+        'STATUS',
+        'DESCRIPTION',
+        'TYPE',
+        'WHENCREATED',
+        'WHENMODIFIED',
+        'CREATEDBY',
+        'MODIFIEDBY'
     ]
 }
