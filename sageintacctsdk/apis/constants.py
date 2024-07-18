@@ -696,5 +696,10 @@ dimensions_fields_mapping = {
         'TASKDIMKEY',
         'TASKID',
         'TASKNAME'
+    ],
+    'ALLOCATION': [
+        'RECORDNO',
+        'ALLOCATIONID',
+        'STATUS'
     ]
 }
