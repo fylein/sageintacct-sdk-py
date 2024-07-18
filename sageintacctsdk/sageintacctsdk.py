@@ -1,12 +1,11 @@
 """
 Sage Intacct Python SDK
 """
-from sageintacctsdk.apis.allocation_entry import AllocationEntry
 from .apis import ApiBase, Contacts, Contracts, Locations, Employees, Accounts, ExpenseTypes, Attachments, ExpenseReports,\
     Vendors, Bills, Projects, Departments, ChargeCardAccounts, ChargeCardTransactions, Customers, Items,\
     APPayments, Reimbursements, CheckingAccounts, SavingsAccounts, Tasks, ExpensePaymentTypes, Dimensions,\
     DimensionValues, LocationEntities, ARInvoices, ARPayments, TaxDetails, GLDetail, Classes, JournalEntries,\
-    RevRecSchedules, RevRecScheduleEntries, CostTypes, OrderEntryTransactions
+    RevRecSchedules, RevRecScheduleEntries, CostTypes, OrderEntryTransactions, Allocations, AllocationEntry
 
 
 class SageIntacctSDK:
@@ -72,6 +71,7 @@ class SageIntacctSDK:
         self.rev_rec_schedule_entries = RevRecScheduleEntries()
         self.cost_types = CostTypes()
         self.order_entry_transactions = OrderEntryTransactions()
+        self.allocations = Allocations()
         self.update_sender_id()
         self.update_sender_password()
         self.update_session_id()
@@ -118,6 +118,7 @@ class SageIntacctSDK:
         self.cost_types.set_sender_id(self.__sender_id)
         self.order_entry_transactions.set_sender_id(self.__sender_id)
         self.allocation_entry.set_sender_id(self.__sender_id)
+        self.allocations.set_sender_id(self.__sender_id)
 
     def update_sender_password(self):
         """
@@ -160,6 +161,7 @@ class SageIntacctSDK:
         self.cost_types.set_sender_password(self.__sender_password)
         self.order_entry_transactions.set_sender_password(self.__sender_password)
         self.allocation_entry.set_sender_password(self.__sender_password)
+        self.allocations.set_sender_password(self.__sender_password)
 
     def update_session_id(self):
         """
@@ -204,6 +206,7 @@ class SageIntacctSDK:
         self.cost_types.set_session_id(self.__session_id)
         self.order_entry_transactions.set_session_id(self.__session_id)
         self.allocation_entry.set_session_id(self.__session_id)
+        self.allocations.set_session_id(self.__session_id)
 
     def update_show_private(self):
         """
@@ -246,3 +249,4 @@ class SageIntacctSDK:
         self.cost_types.set_show_private(self.__show_private)
         self.order_entry_transactions.set_show_private(self.__show_private)
         self.allocation_entry.set_show_private(self.__show_private)
+        self.allocations.set_show_private(self.__show_private)
