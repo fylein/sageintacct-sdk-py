@@ -598,3 +598,17 @@ class ApiBase:
 
         data = {'lookup': {'object': self.__dimension}}
         return self.format_and_send_request(data)['data']
+
+    def delete(self, key):
+        """
+        Delete the dimension with the given key
+        """
+
+        data = {
+            'delete': {
+                'object': self.__dimension,
+                'keys': str(key)
+            }
+        }
+
+        return self.format_and_send_request(data=data)
