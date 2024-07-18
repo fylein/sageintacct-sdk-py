@@ -6,17 +6,20 @@ class AllocationEntry(ApiBase):
         ApiBase.__init__(self, dimension='allocationentry')
 
 
-    def get_all(self, field: str = None, value: str = None, fields: list = None, keys: list = None):
+    def get_all_generator(self, field: str = None, value: str = None, fields: list = None, updated_at: str = None, order_by_field: str = None, order: str = None):
 
-        data = {
-            'readByQuery': {
-                'object': 'allocationentry',
-                'fields': '*',
-                'query': f"ALLOCATIONID in ({','.join(f"'{k}'" for k in keys)})" if keys else None,
-                'pagesize': '1000'
-            }
-        }
+        """
+        Get all the allocation entries.
+        """
 
-        print(data)
+        allocation_entries_fields = ['ALLOCATIONID', 'ALLOCATIONKEY', 'LOCATIONID', 'DEPARTMENTID', 'PROJECTID',
+                                    'CUSTOMERID', 'ITEMID', 'TASKID', 'COSTTYPEID', 'CLASSID']
 
-        return self.format_and_send_request(data=data)
+        fields = self.get_lookup()
+        if fields:
+            fields = fields['Type']['Relationships']['Relationship']
+
+        for allocation_field in fields:
+            allocation_entries_fields.append(allocation_field['RELATEDBY'])
+
+        yield from super().get_all_generator(fields=allocation_entries_fields, field=field, value=value)
