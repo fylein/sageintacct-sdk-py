@@ -16,7 +16,7 @@ class AllocationEntry(ApiBase):
                                     'CUSTOMERID', 'ITEMID', 'TASKID', 'COSTTYPEID', 'CLASSID']
 
         fields = self.get_lookup()
-        if fields:
+        if fields and 'Type' in fields and fields['Type'] and 'Relationships' in fields['Type'] and fields['Type']['Relationships'] and 'Relationship' in fields['Type']['Relationships']:
             fields = fields['Type']['Relationships']['Relationship']
 
         for allocation_field in fields:
