@@ -14,12 +14,13 @@ class AllocationEntry(ApiBase):
 
         allocation_entries_fields = ['ALLOCATIONID', 'ALLOCATIONKEY', 'LOCATIONID', 'DEPARTMENTID', 'PROJECTID',
                                     'CUSTOMERID', 'ITEMID', 'TASKID', 'COSTTYPEID', 'CLASSID']
+        user_defined_dimensions = []
 
         fields = self.get_lookup()
         if fields and 'Type' in fields and fields['Type'] and 'Relationships' in fields['Type'] and fields['Type']['Relationships'] and 'Relationship' in fields['Type']['Relationships']:
-            fields = fields['Type']['Relationships']['Relationship']
+            user_defined_dimensions = fields['Type']['Relationships']['Relationship']
 
-        for allocation_field in fields:
+        for allocation_field in user_defined_dimensions:
             allocation_entries_fields.append(allocation_field['RELATEDBY'])
 
         yield from super().get_all_generator(fields=allocation_entries_fields, field=field, value=value)
