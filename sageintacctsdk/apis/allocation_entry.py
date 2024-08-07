@@ -1,4 +1,6 @@
 import re
+
+from sageintacctsdk.exceptions import WrongParamsError
 from .api_base import ApiBase
 
 class AllocationEntry(ApiBase):
@@ -26,14 +28,20 @@ class AllocationEntry(ApiBase):
 
         try:
             yield from super().get_all_generator(fields=allocation_entries_fields, field=field, value=value)
-        except Exception as e:
+        except WrongParamsError as e:
             error_response = e.response
-            description2 = error_response['error'][0].get('description2', '')
-            match = re.search(r'\n\tallocationentry: \[(.*?)\]', description2)
-            if match:
-                allocation_entries_list = match.group(1).split(', ')
-                for remove_field in allocation_entries_list:
-                    allocation_entries_fields.remove(remove_field)
-                yield from super().get_all_generator(fields=allocation_entries_fields, field=field, value=value)
+            description2 = ''
+            if 'error' in error_response and isinstance(error_response['error'], list) and error_response['error']:
+                error = error_response['error'][0]
+                if 'description2' in error:
+                    description2 = error['description2']
+            
+            if description2:
+                match = re.search(r'\n\tallocationentry: \[(.*?)\]', description2)
+                if match:
+                    removable_fields = match.group(1).split(', ')
+                    for remove_field in removable_fields:
+                        allocation_entries_fields.remove(remove_field)
+                    yield from super().get_all_generator(fields=allocation_entries_fields, field=field, value=value)
             else:
                 raise
