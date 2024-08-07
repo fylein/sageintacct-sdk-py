@@ -30,6 +30,8 @@ class AllocationEntry(ApiBase):
             yield from super().get_all_generator(fields=allocation_entries_fields, field=field, value=value)
         except WrongParamsError as e:
             error_response = e.response
+            if error_response is None:
+                raise
             description2 = ''
             if 'error' in error_response and isinstance(error_response['error'], list) and error_response['error']:
                 error = error_response['error'][0]
