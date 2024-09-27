@@ -201,7 +201,7 @@ class ApiBase:
 
             if parsed_response['response']['control']['status'] == 'failure':
                 exception_msg = self.__decode_support_id(parsed_response['response']['errormessage'])
-                print(parsed_response)
+
                 raise WrongParamsError('Some of the parameters are wrong', exception_msg)
 
             if api_response['authentication']['status'] == 'failure':
