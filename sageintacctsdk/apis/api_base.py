@@ -352,7 +352,7 @@ class ApiBase:
 
         return self.format_and_send_request(payload)
 
-    def count(self):
+    def count(self, field: str = 'STATUS', value: str = 'active'):
         get_count = {
             'query': {
                 'object': self.__dimension,
@@ -360,11 +360,13 @@ class ApiBase:
                     'field': 'RECORDNO'
                 },
                 'filter': {
-                    'equalto': {'field': 'STATUS', 'value': 'active'}
+                    'equalto': {'field': field, 'value': value}
                 },
                 'pagesize': '1'
             }
         }
+        if not field or not value:
+            del get_count['query']['filter']
 
         response = self.format_and_send_request(get_count)
         return int(response['data']['@totalcount'])
@@ -417,7 +419,7 @@ class ApiBase:
             List of Dict.
         """
         complete_data = []
-        count = self.count()
+        count = self.count(None)
         pagesize = self.__pagesize
         for offset in range(0, count, pagesize):
             data = {
@@ -448,7 +450,7 @@ class ApiBase:
         """
         Get all data from Sage Intacct
         """
-        count = self.count()
+        count = self.count(None)
         pagesize = self.__pagesize
         for offset in range(0, count, pagesize):
             data = {
@@ -534,7 +536,7 @@ class ApiBase:
 
         complete_data = []
         filtered_total = None
-        count = self.count()
+        count = self.count(None)
         pagesize = self.__pagesize
         offset = 0
         formatted_filter = filter_payload
