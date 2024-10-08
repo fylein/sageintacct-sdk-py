@@ -441,8 +441,12 @@ class ApiBase:
                     }
                 }
 
-            paginated_data = self.format_and_send_request(data)['data'][self.__dimension]
-            complete_data.extend(paginated_data)
+            response = self.format_and_send_request(data)['data']
+            if self.__dimension in response:
+                paginated_data = response[self.__dimension]
+                complete_data.extend(paginated_data)
+
+            break
 
         return complete_data
 
@@ -584,7 +588,8 @@ class ApiBase:
         for offset in range(0, count, pagesize):
             data['query']['offset'] = offset
             paginated_data = self.format_and_send_request(data)['data']
-            complete_data.extend(paginated_data[self.__dimension])
+            if self.__dimension in paginated_data:
+                complete_data.extend(paginated_data[self.__dimension])
             filtered_total = int(paginated_data['@totalcount'])
             if paginated_data['@numremaining'] == '0':
                 break
