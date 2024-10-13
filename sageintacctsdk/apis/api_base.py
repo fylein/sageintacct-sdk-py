@@ -201,7 +201,12 @@ class ApiBase:
         parsed_response = json.loads(json.dumps(parsed_xml))
 
         if raw_response.status_code == 200:
-            logger.debug('Response for post request: %s', raw_response.text)
+            if (parsed_response['response']['control']['status'] == 'failure' or parsed_response['response']['operation']['authentication']['status'] == 'failure' or \
+                parsed_response['response']['operation']['result']['status'] == 'failure'):
+                logger.info('Response for post request: %s', raw_response.text)
+            else:
+                logger.debug('Response for post request: %s', raw_response.text)
+                
             if parsed_response['response']['control']['status'] == 'success':
                 api_response = parsed_response['response']['operation']
 
