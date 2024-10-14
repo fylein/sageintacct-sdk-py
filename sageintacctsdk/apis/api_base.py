@@ -370,7 +370,7 @@ class ApiBase:
 
         return self.format_and_send_request(payload)
 
-    def count(self):
+    def count(self, field: str = 'STATUS', value: str = 'active'):
         get_count = {
             'query': {
                 'object': self.__dimension,
@@ -378,11 +378,13 @@ class ApiBase:
                     'field': 'RECORDNO'
                 },
                 'filter': {
-                    'equalto': {'field': 'STATUS', 'value': 'active'}
+                    'equalto': {'field': field, 'value': value}
                 },
                 'pagesize': '1'
             }
         }
+        if not field or not value:
+            del get_count['query']['filter']
 
         response = self.format_and_send_request(get_count)
         return int(response['data']['@totalcount'])
@@ -435,7 +437,7 @@ class ApiBase:
             List of Dict.
         """
         complete_data = []
-        count = self.count()
+        count = self.count(None)
         pagesize = self.__pagesize
         for offset in range(0, count, pagesize):
             data = {
@@ -457,8 +459,12 @@ class ApiBase:
                     }
                 }
 
-            paginated_data = self.format_and_send_request(data)['data'][self.__dimension]
-            complete_data.extend(paginated_data)
+            response = self.format_and_send_request(data)['data']
+            if self.__dimension in response:
+                paginated_data = response[self.__dimension]
+                complete_data.extend(paginated_data)
+
+            break
 
         return complete_data
 
@@ -466,7 +472,7 @@ class ApiBase:
         """
         Get all data from Sage Intacct
         """
-        count = self.count()
+        count = self.count(None)
         pagesize = self.__pagesize
         for offset in range(0, count, pagesize):
             data = {
@@ -552,7 +558,7 @@ class ApiBase:
 
         complete_data = []
         filtered_total = None
-        count = self.count()
+        count = self.count(None)
         pagesize = self.__pagesize
         offset = 0
         formatted_filter = filter_payload
@@ -600,7 +606,8 @@ class ApiBase:
         for offset in range(0, count, pagesize):
             data['query']['offset'] = offset
             paginated_data = self.format_and_send_request(data)['data']
-            complete_data.extend(paginated_data[self.__dimension])
+            if self.__dimension in paginated_data:
+                complete_data.extend(paginated_data[self.__dimension])
             filtered_total = int(paginated_data['@totalcount'])
             if paginated_data['@numremaining'] == '0':
                 break
