@@ -2,6 +2,7 @@
 API Base class with util functions
 """
 import json
+import logging
 import datetime
 import uuid
 from warnings import warn
@@ -16,6 +17,8 @@ from ..exceptions import SageIntacctSDKError, ExpiredTokenError, InvalidTokenErr
     WrongParamsError, NotFoundItemError, InternalServerError, DataIntegrityWarning
 from .constants import dimensions_fields_mapping
 
+
+logger = logging.getLogger(__name__)
 
 class ApiBase:
     """The base class for all API classes."""
@@ -186,6 +189,7 @@ class ApiBase:
             A response from the request (dict).
         """
 
+        logger.debug('Payload for post request: %s', dict_body)
         raw_response = self.__post_request_for_raw_response(dict_body, api_url)
         try:
             parsed_xml = xmltodict.parse(raw_response.text, force_list={self.__dimension})
@@ -196,6 +200,17 @@ class ApiBase:
         parsed_response = json.loads(json.dumps(parsed_xml))
 
         if raw_response.status_code == 200:
+            response = parsed_response.get('response', {})
+            control_status = response.get('control', {}).get('status', '')
+            auth_status = response.get('operation', {}).get('authentication', {}).get('status', '')
+            result_status = response.get('operation', {}).get('result', {}).get('status', '')
+            
+
+            if control_status == 'failure' or auth_status == 'failure' or result_status == 'failure':
+                logger.info('Response for post request: %s', raw_response.text)
+            else:
+                logger.debug('Response for post request: %s', raw_response.text)
+          
             if parsed_response['response']['control']['status'] == 'success':
                 api_response = parsed_response['response']['operation']
 
@@ -235,6 +250,8 @@ class ApiBase:
                     }
                     raise WrongParamsError('Something went wrong', custom_response)
 
+
+        logger.info('Response for post request: %s', raw_response.text)
         if 'result' in parsed_response:
             if 'errormessage' in parsed_response['result']:
                 parsed_response = parsed_response['result']['errormessage']
