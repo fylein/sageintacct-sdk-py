@@ -19,7 +19,6 @@ from .constants import dimensions_fields_mapping
 
 
 logger = logging.getLogger(__name__)
-logger.level = logging.WARNING
 
 class ApiBase:
     """The base class for all API classes."""
