@@ -459,11 +459,10 @@ class ApiBase:
                 }
 
             response = self.format_and_send_request(data)['data']
-            if self.__dimension in response:
-                paginated_data = response[self.__dimension]
-                complete_data.extend(paginated_data)
-
-            break
+            if self.__dimension not in response:
+                break
+            paginated_data = response[self.__dimension]
+            complete_data.extend(paginated_data)
 
         return complete_data
 
