@@ -204,13 +204,13 @@ class ApiBase:
             control_status = response.get('control', {}).get('status', '')
             auth_status = response.get('operation', {}).get('authentication', {}).get('status', '')
             result_status = response.get('operation', {}).get('result', {}).get('status', '')
-            
+
 
             if control_status == 'failure' or auth_status == 'failure' or result_status == 'failure':
                 logger.info('Response for post request: %s', raw_response.text)
             else:
                 logger.debug('Response for post request: %s', raw_response.text)
-          
+
             if parsed_response['response']['control']['status'] == 'success':
                 api_response = parsed_response['response']['operation']
 
@@ -255,7 +255,7 @@ class ApiBase:
         if 'result' in parsed_response:
             if 'errormessage' in parsed_response['result']:
                 parsed_response = parsed_response['result']['errormessage']
-    
+
         if 'response' in parsed_response:
             if 'errormessage' in parsed_response['response']:
                 parsed_response = parsed_response['response']['errormessage']
