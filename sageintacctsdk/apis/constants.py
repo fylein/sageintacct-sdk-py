@@ -131,6 +131,7 @@ dimensions_fields_mapping = {
         "DEPARTMENTID",
         "TASKID",
         "VENDORID",
+        "WHENMODIFIED",
     ],
     "DEPARTMENT": [
         "RECORDNO",
