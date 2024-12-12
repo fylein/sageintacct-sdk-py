@@ -574,7 +574,7 @@ dimensions_fields_mapping = {
         "MEGAENTITYID",
         "MEGAENTITYNAME",
     ],
-    "ARINVOICEITEMS": [
+    "ARINVOICEITEM": [
         "RECORDNO",
         "RECORDKEY",
         "ACCOUNTKEY",
