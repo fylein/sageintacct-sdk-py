@@ -18,7 +18,7 @@ setuptools.setup(
     keywords=['sage-intacct', 'sage', 'fyle', 'api', 'python', 'sdk'],
     url='https://github.com/fylein/sageintacct-sdk-py',
     packages=setuptools.find_packages(),
-    install_requires=['requests>=2.32.3', 'xmltodict==0.14.2'],
+    install_requires=['requests>=2.25.0', 'xmltodict>=0.12.0'],
     classifiers=[
         'Topic :: Internet :: WWW/HTTP',
         'Intended Audience :: Developers',
