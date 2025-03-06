@@ -43,10 +43,10 @@ class Attachments(ApiBase):
         return self.format_and_send_request(data)
 
     def delete(self, key: str):
-        """Delete a attachment in Sage Intacct.
+        """Delete an attachment in Sage Intacct.
 
         Returns:
-            Dict of state of request
+            Dict of state of request response
         """
         data = {
             'delete_supdoc': {
