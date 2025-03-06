@@ -50,7 +50,7 @@ class Attachments(ApiBase):
         """
         data = {
             'delete_supdoc': {
-                "key": key
+                '@key': key
                 }
         }
         return self.format_and_send_request(data)
