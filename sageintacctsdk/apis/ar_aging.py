@@ -30,7 +30,23 @@ class ARAging(ApiBase):
                 If True, returns line-level details; else returns summary buckets only.
 
         Returns:
-            The parsed response under the "data" key (typically a dict of aging buckets).
+            Dict: The parsed response containing AR aging data, e.g.:
+            {
+                "araging": [
+                    {
+                        "aging": [
+                            {
+                                "agingdetails": {
+                                    ...
+                                },
+                                "agingperiod": "31-60",
+                                "totalamount": "100.00"
+                            }
+                        ],
+                        "customerid": "12345"
+                    }
+                ]
+            }
         """
         # normalize the periods into a single comma-string
         if isinstance(agingperiods, (list, tuple)):
