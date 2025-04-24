@@ -1,5 +1,5 @@
 """
-Sage Intacct AR Invoice Items
+Sage Intacct AR Aging API
 """
 
 from typing import Dict, List, Optional, Union
