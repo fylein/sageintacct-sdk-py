@@ -41,6 +41,7 @@ from .cost_types import CostTypes
 from .order_entry_transactions import OrderEntryTransactions
 from .allocation_entry import AllocationEntry
 from .allocations import Allocations
+from .ar_aging import ARAging
 
 __all__ = [
     'ApiBase',
@@ -82,5 +83,6 @@ __all__ = [
     'RevRecScheduleEntries',
     'CostTypes',
     'OrderEntryTransactions',
-    'Allocations'
+    'Allocations',
+    'ARAging'
 ]
