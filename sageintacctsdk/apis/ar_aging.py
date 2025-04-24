@@ -14,7 +14,7 @@ class ARAging(ApiBase):
     def get_araging(
         self,
         agingperiods: Union[str, List[str]],
-        customerid: Optional[str] = None,
+        customerid: Optional[str] = "",
         showdetails: bool = False
     ) -> Dict:
         """
@@ -38,11 +38,18 @@ class ARAging(ApiBase):
         else:
             periods = agingperiods
 
+        # basic validation to ensure aging periods have correct format
+        if not agingperiods:
+            raise ValueError("Aging periods cannot be empty")
+        for period in periods.split(","):
+            if not (period.endswith("-") or "-" in period):
+                raise ValueError(f"Invalid aging period format: {period}. Expected format like '31-60' or '121-'")
+
         # build payload
         data = {
             "get_araging": {
                 "agingperiods": periods,
-                "customerid": customerid or "",
+                "customerid": customerid,
                 "showdetails": "true" if showdetails else "false"
             }
         }
