@@ -27,7 +27,7 @@ connection = SageIntacctSDK(
     user_password='<YOUR USER PASSWORD>'
 )
 ```
-2. After that you'll be able to access any of the 29 API classes: accounts, ap_payments, ar_invoices, ar_payments, ar_aging, attachments, bills, charge_card_accounts, charge_card_transactions, checking_accounts, classes, contacts, customers, departments, employees, expense_payment_types, expense_reports, expense_types, gl_detail, items, locations, order_entry_transactions, projects, reimbursements, revenue_recognition_schedules, revenue_recognition_schedule_entries, savings_accounts, tasks and vendors.
+2. After that you'll be able to access any of the 30 API classes: accounts, ap_payments, ar_invoices, ar_payments, ar_aging, attachments, bills, charge_card_accounts, charge_card_transactions, checking_accounts, classes, contacts, customers, departments, employees, expense_payment_types, expense_reports, expense_types, gl_detail, gl_entry, items, locations, order_entry_transactions, projects, reimbursements, revenue_recognition_schedules, revenue_recognition_schedule_entries, savings_accounts, tasks and vendors.
 ```python
 """
 USAGE: <SageIntacctSDK INSTANCE>.<API_NAME>.<API_METHOD>(<PARAMETERS>)
