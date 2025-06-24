@@ -5,7 +5,7 @@ from .apis import ApiBase, Contacts, Contracts, ContractLines, Locations, Employ
     Vendors, Bills, Projects, Departments, ChargeCardAccounts, ChargeCardTransactions, Customers, Items,\
     APPayments, Reimbursements, CheckingAccounts, SavingsAccounts, Tasks, ExpensePaymentTypes, Dimensions,\
     DimensionValues, LocationEntities, ARInvoices, ARInvoiceItems, ARPayments, TaxDetails, GLDetail, Classes, JournalEntries,\
-    RevRecSchedules, RevRecScheduleEntries, CostTypes, OrderEntryTransactions, Allocations, AllocationEntry, ARAging
+    RevRecSchedules, RevRecScheduleEntries, CostTypes, OrderEntryTransactions, Allocations, AllocationEntry, ARAging, GLEntry
 
 
 class SageIntacctSDK:
@@ -67,6 +67,7 @@ class SageIntacctSDK:
         self.location_entities = LocationEntities()
         self.tax_details = TaxDetails()
         self.gl_detail = GLDetail()
+        self.gl_entry = GLEntry()
         self.classes = Classes()
         self.journal_entries = JournalEntries()
         self.rev_rec_schedules = RevRecSchedules()
@@ -116,6 +117,7 @@ class SageIntacctSDK:
         self.location_entities.set_sender_id(self.__sender_id)
         self.tax_details.set_sender_id(self.__sender_id)
         self.gl_detail.set_sender_id(self.__sender_id)
+        self.gl_entry.set_sender_id(self.__sender_id)
         self.classes.set_sender_id(self.__sender_id)
         self.journal_entries.set_sender_id(self.__sender_id)
         self.rev_rec_schedules.set_sender_id(self.__sender_id)
@@ -162,6 +164,7 @@ class SageIntacctSDK:
         self.location_entities.set_sender_password(self.__sender_password)
         self.tax_details.set_sender_password(self.__sender_password)
         self.gl_detail.set_sender_password(self.__sender_password)
+        self.gl_entry.set_sender_password(self.__sender_password)
         self.classes.set_sender_password(self.__sender_password)
         self.journal_entries.set_sender_password(self.__sender_password)
         self.rev_rec_schedules.set_sender_password(self.__sender_password)
@@ -210,6 +213,7 @@ class SageIntacctSDK:
         self.location_entities.set_session_id(self.__session_id)
         self.tax_details.set_session_id(self.__session_id)
         self.gl_detail.set_session_id(self.__session_id)
+        self.gl_entry.set_session_id(self.__session_id)
         self.classes.set_session_id(self.__session_id)
         self.journal_entries.set_session_id(self.__session_id)
         self.rev_rec_schedules.set_session_id(self.__session_id)
@@ -256,6 +260,7 @@ class SageIntacctSDK:
         self.location_entities.set_show_private(self.__show_private)
         self.tax_details.set_show_private(self.__show_private)
         self.gl_detail.set_show_private(self.__show_private)
+        self.gl_entry.set_show_private(self.__show_private)
         self.classes.set_show_private(self.__show_private)
         self.journal_entries.set_show_private(self.__show_private)
         self.rev_rec_schedules.set_show_private(self.__show_private)

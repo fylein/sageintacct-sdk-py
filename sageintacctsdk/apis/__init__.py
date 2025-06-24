@@ -32,6 +32,7 @@ from .tasks import Tasks
 from .expense_payment_types import ExpensePaymentTypes
 from .location_entities import LocationEntities
 from .tax_details import TaxDetails
+from .gl_entry import GLEntry
 from .gl_detail import GLDetail
 from .classes import Classes
 from .journal_entries import JournalEntries
@@ -77,6 +78,7 @@ __all__ = [
     'LocationEntities',
     'TaxDetails',
     'GLDetail',
+    'GLEntry',
     'Classes',
     'JournalEntries',
     'RevRecSchedules',
