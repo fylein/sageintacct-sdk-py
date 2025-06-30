@@ -371,21 +371,16 @@ class ApiBase:
 
     def count(self, field: str = 'STATUS', value: str = 'active'):
         get_count = {
-            'query': {
+            'readByQuery': {
                 'object': self.__dimension,
-                'select': {
-                    'field': 'RECORDNO'
-                },
-                'filter': {
-                    'equalto': {'field': field, 'value': value}
-                },
+                'fields': 'RECORDNO',
+                'query': '1=1',
                 'pagesize': '1'
             }
         }
-        if not field or not value:
-            del get_count['query']['filter']
 
         response = self.format_and_send_request(get_count)
+        print(response)
         return int(response['data']['@totalcount'])
 
     def read_by_query(self, fields: list = None):
@@ -429,41 +424,77 @@ class ApiBase:
 
         return self.format_and_send_request(data)['data']
 
-    def get_all(self, field: str = None, value: str = None, fields: list = None):
-        """Get all data from Sage Intacct
+    def get_all(self, field: str = '1', value: str = '1', fields: list = None):
+        """Get all data from Sage Intacct using paginated readByQuery and readMore.
 
         Returns:
             List of Dict.
         """
         complete_data = []
         count = self.count(None)
+        print(f"API says total count is: {count}")
         pagesize = self.__pagesize
-        for offset in range(0, count, pagesize):
+
+        # Initial readByQuery request
+        data = {
+            'readByQuery': {
+                'object': self.__dimension,
+                'fields': '*',
+                'pagesize': pagesize,
+                'query': "{0} = '{1}'".format(field, value),
+            }
+        }
+
+        response = self.format_and_send_request(data)['data']
+
+        # Find the key in response that matches self.__dimension, case-insensitively
+        paginated_data = None
+        for key in response:
+            if key.lower() == self.__dimension.lower():
+                paginated_data = response[key]
+                break
+
+        if paginated_data is None:
+            print(f"Dimension {self.__dimension} not found in response, returning empty list.")
+            return []
+
+        complete_data.extend(paginated_data if isinstance(paginated_data, list) else [paginated_data])
+        actual_records_processed = len(complete_data)
+        print(f"Page 1: got {len(paginated_data)} records")
+        print(f"Total processed so far: {actual_records_processed}")
+
+        # Pagination using readMore and resultId
+        result_id = response.get('@resultId')
+        num_remaining = int(response.get('@numremaining', 0))
+        page = 2
+
+        while result_id and num_remaining > 0:
             data = {
-                'query': {
-                    'object': self.__dimension,
-                    'select': {
-                        'field': fields if fields else dimensions_fields_mapping[self.__dimension]
-                    },
-                    'pagesize': pagesize,
-                    'offset': offset
+                'readMore': {
+                    'resultId': result_id
                 }
             }
-
-            if field and value:
-                data['query']['filter'] = {
-                    'equalto': {
-                        'field': field,
-                        'value': value
-                    }
-                }
-
             response = self.format_and_send_request(data)['data']
-            if self.__dimension not in response:
-                break
-            paginated_data = response[self.__dimension]
-            complete_data.extend(paginated_data)
+            paginated_data = None
+            for key in response:
+                if key.lower() == self.__dimension.lower():
+                    paginated_data = response[key]
+                    break
 
+            if paginated_data is None:
+                print(f"Dimension {self.__dimension} not found in response, breaking loop.")
+                break
+
+            complete_data.extend(paginated_data if isinstance(paginated_data, list) else [paginated_data])
+            actual_records_processed = len(complete_data)
+            print(f"Page {page}: got {len(paginated_data)} records")
+            print(f"Total processed so far: {actual_records_processed}")
+
+            result_id = response.get('@resultId')
+            num_remaining = int(response.get('@numremaining', 0))
+            page += 1
+
+        print(f"Expected {count}, actually got {len(complete_data)}")
         return complete_data
 
     def get_all_generator(self, field: str = None, value: str = None, fields: list = None, updated_at: str = None, order_by_field: str = None, order: str = None):
