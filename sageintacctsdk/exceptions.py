@@ -50,7 +50,37 @@ class NoPrivilegeError(SageIntacctSDKError):
 
 
 class WrongParamsError(SageIntacctSDKError):
-    """Some of the parameters (HTTP params or request body) are wrong, 400 error."""
+    """Some of the parameters (HTTP params or request body) are wrong, 400 error.
+    
+    Parameters:
+        msg (str): Short description of the error.
+        response: Error response from the API call containing details about wrong parameters.
+    """
+    def __init__(self, msg, response=None):
+        super(WrongParamsError, self).__init__(msg, response)
+        self.error_details = self._extract_error_details(response)
+
+    def _extract_error_details(self, response):
+        """Extract detailed error information from the API response."""
+        if not response:
+            return None
+        
+        try:
+            if hasattr(response, 'json'):
+                error_data = response.json()
+                if 'error' in error_data:
+                    return error_data['error']
+                return error_data
+            return str(response)
+        except Exception:
+            return str(response)
+
+    def __str__(self):
+        """Provide a detailed string representation of the error."""
+        base_message = repr(self.message)
+        if self.error_details:
+            return f"{base_message}\nError Details: {self.error_details}"
+        return base_message
 
 
 class NotFoundItemError(SageIntacctSDKError):
