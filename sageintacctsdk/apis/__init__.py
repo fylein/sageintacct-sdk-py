@@ -42,6 +42,7 @@ from .order_entry_transactions import OrderEntryTransactions
 from .allocation_entry import AllocationEntry
 from .allocations import Allocations
 from .ar_aging import ARAging
+from .inventory_control_price_list_entries import InventoryControlPriceListEntries
 
 __all__ = [
     'ApiBase',
@@ -84,5 +85,6 @@ __all__ = [
     'CostTypes',
     'OrderEntryTransactions',
     'Allocations',
-    'ARAging'
+    'ARAging',
+    'InventoryControlPriceListEntries'
 ]
