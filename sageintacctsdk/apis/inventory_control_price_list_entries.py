@@ -1,5 +1,5 @@
 """
-Sage Intacct AR Invoice Items
+Sage Inventory Control Price List Entries
 """
 
 from .api_base import ApiBase
