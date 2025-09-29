@@ -67,7 +67,7 @@ response = connection.employees.get(field='EMPLOYEEID', value='E101')
 ```
 
 ## Advanced Queries
-Several methods of querying the Sage Inacct API exists within the SDK.  <get_by_query> allows you to specify multiple
+Several methods of querying the Sage Inacct API exists within the SDK. <get_by_query> allows you to specify multiple
 critera using textual mathematical operators and logical filters.
 
 Arguments are passed to and_filter, or_filter, or both.  The and_filter is the default operator to pass filters to.
