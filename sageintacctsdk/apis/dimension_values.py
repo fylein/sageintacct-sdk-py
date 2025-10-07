@@ -51,6 +51,10 @@ class DimensionValues(ApiBase):
             }
 
             user_dimensions = self.format_and_send_request(data)['data'][dimension_name]
-            total_user_dimensions.extend(user_dimensions)
+
+            if isinstance(user_dimensions, dict):
+                total_user_dimensions.extend([user_dimensions])
+            else:
+                total_user_dimensions.extend(user_dimensions)
 
         return total_user_dimensions
