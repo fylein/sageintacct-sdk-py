@@ -211,6 +211,9 @@ class ApiBase:
             else:
                 logger.debug('Response for post request: %s', raw_response.text)
 
+            if 'API rate limit exceeded' in raw_response.text:
+                raise InternalServerError('API rate limit exceeded', parsed_response)
+
             if parsed_response['response']['control']['status'] == 'success':
                 api_response = parsed_response['response']['operation']
 
@@ -232,6 +235,8 @@ class ApiBase:
                     for error in exception_msg['error']:
                         if error['description2'] and 'You do not have permission for API' in error['description2']:
                             raise NoPrivilegeError('The user has insufficient privilege', exception_msg)
+                        elif error['description2'] and 'The Service is Temporarily Off-line' in error['description2']:
+                            raise InternalServerError('The Service is Temporarily Off-line', exception_msg)
 
                     raise WrongParamsError('Error during {0}'.format(api_response['result']['function']), exception_msg)
                 else:
