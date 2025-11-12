@@ -211,6 +211,9 @@ class ApiBase:
             else:
                 logger.debug('Response for post request: %s', raw_response.text)
 
+            if 'API rate limit exceeded' in raw_response.text:
+                raise InternalServerError('API rate limit exceeded', parsed_response)
+
             if parsed_response['response']['control']['status'] == 'success':
                 api_response = parsed_response['response']['operation']
 
