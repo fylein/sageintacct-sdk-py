@@ -33,6 +33,8 @@ from .expense_payment_types import ExpensePaymentTypes
 from .location_entities import LocationEntities
 from .tax_details import TaxDetails
 from .gl_detail import GLDetail
+from .ap_detail import APDetail
+from .tax_solutions import TaxSolutions
 from .classes import Classes
 from .journal_entries import JournalEntries
 from .revenue_recognition_schedules import RevRecSchedules
@@ -78,6 +80,8 @@ __all__ = [
     'LocationEntities',
     'TaxDetails',
     'GLDetail',
+    'APDetail',
+    'TaxSolutions',
     'Classes',
     'JournalEntries',
     'RevRecSchedules',

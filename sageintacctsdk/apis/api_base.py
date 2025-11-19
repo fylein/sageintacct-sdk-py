@@ -374,21 +374,81 @@ class ApiBase:
 
         return self.format_and_send_request(payload)
 
-    def count(self, field: str = 'STATUS', value: str = 'active'):
+    def count(self, field: str = 'STATUS', value: str = 'active', 
+              and_filter: List[Tuple[str, str, str]] = None,
+              or_filter: List[Tuple[str, str, str]] = None,
+              filter_payload: dict = None):
+        """Get count of records from Sage Intacct.
+
+        Parameters:
+            field (str): Field to filter by (default: 'STATUS')
+            value (str): Value to filter by (default: 'active')
+            and_filter (list): List of tuples containing (operator, field, value) for AND conditions
+            or_filter (list): List of tuples containing (operator, field, value) for OR conditions
+            filter_payload (dict): Pre-formatted filter payload (takes highest priority)
+
+        Returns:
+            int: Count of records matching the criteria.
+        """
         get_count = {
             'query': {
                 'object': self.__dimension,
                 'select': {
                     'field': 'RECORDNO'
                 },
-                'filter': {
-                    'equalto': {'field': field, 'value': value}
-                },
                 'pagesize': '1'
             }
         }
-        if not field or not value:
-            del get_count['query']['filter']
+        
+        # Priority 1: Use filter_payload if provided (highest priority)
+        if filter_payload:
+            get_count['query']['filter'] = filter_payload
+        
+        # Priority 2: Build complex filter from and_filter or or_filter
+        elif and_filter or or_filter:
+            formatted_filter = None
+            
+            if and_filter and or_filter:
+                # Both AND and OR filters provided
+                formatted_filter = {'and': {}}
+                for operator, field_name, field_value in and_filter:
+                    formatted_filter['and'].setdefault(operator, {}).update({'field': field_name, 'value': field_value})
+                formatted_filter['and']['or'] = {}
+                for operator, field_name, field_value in or_filter:
+                    formatted_filter['and']['or'].setdefault(operator, {}).update({'field': field_name, 'value': field_value})
+            
+            elif and_filter:
+                # Only AND filter provided
+                if len(and_filter) > 1:
+                    formatted_filter = {'and': {}}
+                    for operator, field_name, field_value in and_filter:
+                        formatted_filter['and'].setdefault(operator, []).append({'field': field_name, 'value': field_value})
+                else:
+                    formatted_filter = {}
+                    for operator, field_name, field_value in and_filter:
+                        formatted_filter.setdefault(operator, {}).update({'field': field_name, 'value': field_value})
+            
+            elif or_filter:
+                # Only OR filter provided
+                if len(or_filter) > 1:
+                    formatted_filter = {'or': {}}
+                    for operator, field_name, field_value in or_filter:
+                        formatted_filter['or'].setdefault(operator, []).append({'field': field_name, 'value': field_value})
+                else:
+                    formatted_filter = {}
+                    for operator, field_name, field_value in or_filter:
+                        formatted_filter.setdefault(operator, {}).update({'field': field_name, 'value': field_value})
+            
+            if formatted_filter:
+                get_count['query']['filter'] = formatted_filter
+        
+        # Priority 3: Use simple field/value filter (EXISTING BEHAVIOR - PRESERVED)
+        else:
+            if field and value:
+                get_count['query']['filter'] = {
+                    'equalto': {'field': field, 'value': value}
+                }
+            # If field or value is None/empty, no filter is added (EXISTING BEHAVIOR - PRESERVED)
 
         response = self.format_and_send_request(get_count)
         return int(response['data']['@totalcount'])
