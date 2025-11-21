@@ -8,7 +8,7 @@ with open('README.md', 'r') as f:
 
 setuptools.setup(
     name='sageintacctsdk',
-    version='1.27.4',
+    version='1.28.0',
     author='Ashwin T',
     author_email='ashwin.t@fyle.in',
     description='Python SDK for accessing Sage Intacct APIs',
