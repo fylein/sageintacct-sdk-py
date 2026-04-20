@@ -17,7 +17,7 @@ class SageIntacctSDKError(Exception):
         self.response = response
 
     def __str__(self):
-        return repr(self.message)
+        return f'{self.message} | response={self.response!r}'
 
 
 class SageIntacctSDKWarning(Warning):
